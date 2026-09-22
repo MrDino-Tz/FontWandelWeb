@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="800" height="450" fill="#EBF0F6"/>
+  <circle cx="704" cy="80" r="28" fill="#B3DBF0" opacity="0.5"/>
+  <circle cx="80" cy="368" r="18" fill="#B3DBF0" opacity="0.4"/>
+
+  <!-- Queue number ticket -->
+  <rect x="110" y="125" width="220" height="200" rx="22" fill="#FFFFFF" stroke="#0C648F" stroke-width="8"/>
+  <rect x="110" y="125" width="220" height="58" rx="22" fill="#0C648F"/>
+  <rect x="110" y="160" width="220" height="23" fill="#0C648F"/>
+  <circle cx="155" cy="154" r="9" fill="#FFFFFF" opacity="0.85"/>
+  <text x="220" y="272" font-size="104" font-weight="800" fill="#0C648F" text-anchor="middle">A12</text>
+
+  <!-- Service counter with bell -->
+  <rect x="600" y="270" width="130" height="60" rx="10" fill="#FFFFFF" stroke="#5B6472" stroke-width="7"/>
+  <path d="M640 270 a25 25 0 0 1 50 0" fill="#1590C6"/>
+  <rect x="632" y="262" width="66" height="12" rx="6" fill="#0C648F"/>
+  <circle cx="665" cy="232" r="8" fill="#0C648F"/>
+  <line x1="665" y1="240" x2="665" y2="252" stroke="#0C648F" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Queue of people -->
+  <g>
+    <circle cx="420" cy="218" r="24" fill="#0C648F"/>
+    <path d="M384 300 a36 36 0 0 1 72 0" fill="#0C648F"/>
+    <circle cx="510" cy="228" r="20" fill="#1590C6"/>
+    <path d="M480 300 a30 30 0 0 1 60 0" fill="#1590C6"/>
+    <circle cx="580" cy="238" r="16" fill="#B3DBF0"/>
+    <path d="M556 300 a24 24 0 0 1 48 0" fill="#B3DBF0"/>
+    <line x1="370" y1="330" x2="600" y2="330" stroke="#B9C2CF" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Direction arrow -->
+  <g stroke="#0C648F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <line x1="380" y1="130" x2="560" y2="130"/>
+    <polyline points="540,112 562,130 540,148"/>
+  </g>
+</svg>

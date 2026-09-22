@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="800" height="450" fill="#EBF0F6"/>
+  <circle cx="712" cy="72" r="30" fill="#B3DBF0" opacity="0.5"/>
+  <circle cx="84" cy="378" r="20" fill="#B3DBF0" opacity="0.4"/>
+
+  <!-- Wi-Fi signal -->
+  <circle cx="290" cy="262" r="24" fill="#0C648F"/>
+  <g fill="none" stroke="#0C648F" stroke-width="24" stroke-linecap="round">
+    <path d="M228 200 A88 88 0 0 1 352 200"/>
+    <path d="M200 172 A128 128 0 0 1 380 172" opacity="0.65"/>
+    <path d="M172 144 A168 168 0 0 1 408 144" opacity="0.35"/>
+  </g>
+
+  <!-- Voucher ticket -->
+  <rect x="470" y="150" width="250" height="150" rx="22" fill="#FFFFFF" stroke="#0C648F" stroke-width="8"/>
+  <line x1="560" y1="162" x2="560" y2="288" stroke="#B3DBF0" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 14"/>
+  <line x1="492" y1="192" x2="540" y2="192" stroke="#B9C2CF" stroke-width="9" stroke-linecap="round"/>
+  <line x1="492" y1="218" x2="540" y2="218" stroke="#B9C2CF" stroke-width="9" stroke-linecap="round"/>
+  <line x1="492" y1="244" x2="528" y2="244" stroke="#B9C2CF" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="640" cy="212" r="12" fill="#0C648F"/>
+  <g fill="none" stroke="#0C648F" stroke-width="9" stroke-linecap="round">
+    <path d="M612 240 A40 40 0 0 1 668 240"/>
+    <path d="M600 258 A58 58 0 0 1 680 258" opacity="0.55"/>
+  </g>
+  <rect x="492" y="258" width="48" height="20" rx="10" fill="#1590C6"/>
+</svg>

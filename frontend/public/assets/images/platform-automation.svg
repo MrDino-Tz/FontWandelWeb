@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="800" height="600" fill="#EBF0F6"/>
+  <circle cx="716" cy="80" r="28" fill="#B3DBF0" opacity="0.5"/>
+  <circle cx="80" cy="520" r="20" fill="#B3DBF0" opacity="0.4"/>
+
+  <!-- Connection lines -->
+  <g stroke="#1590C6" stroke-width="6" stroke-dasharray="4 14" stroke-linecap="round" fill="none" opacity="0.8">
+    <line x1="400" y1="300" x2="205" y2="205"/>
+    <line x1="400" y1="300" x2="595" y2="205"/>
+    <line x1="400" y1="300" x2="205" y2="455"/>
+    <line x1="400" y1="300" x2="595" y2="455"/>
+  </g>
+
+  <!-- Satellite: spreadsheet -->
+  <rect x="150" y="150" width="110" height="110" rx="18" fill="#FFFFFF" stroke="#5B6472" stroke-width="7"/>
+  <rect x="172" y="172" width="66" height="66" fill="#FFFFFF" stroke="#0C648F" stroke-width="6"/>
+  <line x1="172" y1="194" x2="238" y2="194" stroke="#0C648F" stroke-width="5"/>
+  <line x1="172" y1="216" x2="238" y2="216" stroke="#B9C2CF" stroke-width="5"/>
+  <line x1="194" y1="172" x2="194" y2="238" stroke="#0C648F" stroke-width="5"/>
+  <line x1="216" y1="172" x2="216" y2="238" stroke="#B9C2CF" stroke-width="5"/>
+
+  <!-- Satellite: cloud -->
+  <rect x="540" y="150" width="110" height="110" rx="18" fill="#FFFFFF" stroke="#5B6472" stroke-width="7"/>
+  <path d="M566 224 a20 20 0 0 1 4 -39 a26 26 0 0 1 50 -8 a22 22 0 0 1 8 47 z" fill="#D9EDF8" stroke="#0C648F" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- Satellite: database -->
+  <rect x="150" y="400" width="110" height="110" rx="18" fill="#FFFFFF" stroke="#5B6472" stroke-width="7"/>
+  <ellipse cx="205" cy="432" rx="24" ry="9" fill="#FFFFFF" stroke="#0C648F" stroke-width="6"/>
+  <rect x="181" y="432" width="48" height="34" fill="#D9EDF8"/>
+  <line x1="181" y1="432" x2="181" y2="466" stroke="#0C648F" stroke-width="6"/>
+  <line x1="229" y1="432" x2="229" y2="466" stroke="#0C648F" stroke-width="6"/>
+  <path d="M181 466 A24 9 0 0 0 229 466" fill="none" stroke="#0C648F" stroke-width="6"/>
+
+  <!-- Satellite: mobile money -->
+  <rect x="540" y="400" width="110" height="110" rx="18" fill="#FFFFFF" stroke="#5B6472" stroke-width="7"/>
+  <rect x="572" y="418" width="46" height="74" rx="10" fill="#FFFFFF" stroke="#0C648F" stroke-width="6"/>
+  <line x1="580" y1="436" x2="610" y2="436" stroke="#1590C6" stroke-width="6" stroke-linecap="round"/>
+  <path d="M584 458 l6 6 l12 -14" fill="none" stroke="#0C648F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="595" cy="482" r="3" fill="#0C648F"/>
+
+  <!-- Central hub -->
+  <rect x="340" y="240" width="120" height="120" rx="26" fill="#0C648F"/>
+  <g stroke="#FFFFFF" stroke-width="9" stroke-linecap="round">
+    <line x1="400" y1="262" x2="400" y2="280"/>
+    <line x1="400" y1="320" x2="400" y2="338"/>
+    <line x1="362" y1="300" x2="380" y2="300"/>
+    <line x1="420" y1="300" x2="438" y2="300"/>
+    <line x1="373" y1="273" x2="386" y2="286"/>
+    <line x1="414" y1="314" x2="427" y2="327"/>
+    <line x1="427" y1="273" x2="414" y2="286"/>
+    <line x1="386" y1="314" x2="373" y2="327"/>
+  </g>
+  <circle cx="400" cy="300" r="24" fill="#0C648F" stroke="#FFFFFF" stroke-width="9"/>
+</svg>

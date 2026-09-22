@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="800" height="500" rx="28" fill="#EBF0F6"/>
+  <circle cx="730" cy="70" r="26" fill="#B3DBF0" opacity="0.5"/>
+  <circle cx="60" cy="430" r="18" fill="#B3DBF0" opacity="0.4"/>
+  <circle cx="742" cy="392" r="10" fill="#1590C6" opacity="0.35"/>
+
+  <!-- Card 1: paper files -->
+  <rect x="40" y="110" width="150" height="170" rx="20" fill="#FFFFFF" stroke="#D8DEE7" stroke-width="3"/>
+  <rect x="80" y="150" width="52" height="70" rx="6" fill="#D8DEE7"/>
+  <rect x="88" y="158" width="56" height="72" rx="6" fill="#FFFFFF" stroke="#5B6472" stroke-width="5"/>
+  <path d="M128 158 L144 174 L128 174 Z" fill="#D8DEE7" stroke="#5B6472" stroke-width="4" stroke-linejoin="round"/>
+  <line x1="98" y1="192" x2="128" y2="192" stroke="#B9C2CF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="98" y1="204" x2="128" y2="204" stroke="#B9C2CF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="98" y1="216" x2="118" y2="216" stroke="#B9C2CF" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Card 2: digital form -->
+  <rect x="230" y="110" width="150" height="170" rx="20" fill="#FFFFFF" stroke="#D8DEE7" stroke-width="3"/>
+  <rect x="268" y="150" width="74" height="88" rx="8" fill="#FFFFFF" stroke="#0C648F" stroke-width="5"/>
+  <rect x="278" y="160" width="54" height="12" rx="6" fill="#1590C6"/>
+  <rect x="278" y="182" width="16" height="16" rx="4" fill="none" stroke="#0C648F" stroke-width="4"/>
+  <path d="M280 190 l5 5 l9 -11" fill="none" stroke="#0C648F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="300" y1="190" x2="332" y2="190" stroke="#B9C2CF" stroke-width="5" stroke-linecap="round"/>
+  <rect x="278" y="206" width="16" height="16" rx="4" fill="none" stroke="#0C648F" stroke-width="4"/>
+  <path d="M280 214 l5 5 l9 -11" fill="none" stroke="#0C648F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="300" y1="214" x2="332" y2="214" stroke="#B9C2CF" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Card 3: central database -->
+  <rect x="420" y="110" width="150" height="170" rx="20" fill="#FFFFFF" stroke="#D8DEE7" stroke-width="3"/>
+  <rect x="460" y="170" width="70" height="56" fill="#D9EDF8"/>
+  <line x1="460" y1="170" x2="460" y2="226" stroke="#0C648F" stroke-width="5" stroke-linecap="round"/>
+  <line x1="530" y1="170" x2="530" y2="226" stroke="#0C648F" stroke-width="5" stroke-linecap="round"/>
+  <path d="M460 226 A35 12 0 0 0 530 226" fill="none" stroke="#0C648F" stroke-width="5"/>
+  <path d="M460 198 A35 12 0 0 0 530 198" fill="none" stroke="#0C648F" stroke-width="4" opacity="0.45"/>
+  <ellipse cx="495" cy="170" rx="35" ry="12" fill="#FFFFFF" stroke="#0C648F" stroke-width="5"/>
+
+  <!-- Card 4: live dashboard -->
+  <rect x="610" y="110" width="150" height="170" rx="20" fill="#FFFFFF" stroke="#D8DEE7" stroke-width="3"/>
+  <line x1="648" y1="160" x2="648" y2="232" stroke="#5B6472" stroke-width="5" stroke-linecap="round"/>
+  <line x1="648" y1="232" x2="724" y2="232" stroke="#5B6472" stroke-width="5" stroke-linecap="round"/>
+  <rect x="658" y="202" width="14" height="30" rx="3" fill="#B3DBF0"/>
+  <rect x="678" y="184" width="14" height="48" rx="3" fill="#1590C6"/>
+  <rect x="698" y="166" width="14" height="66" rx="3" fill="#0C648F"/>
+  <polyline points="658,196 680,178 694,186 714,164" fill="none" stroke="#0C648F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M702 164 H714 V176" fill="none" stroke="#0C648F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Connector arrows -->
+  <g stroke="#0E7CB5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <line x1="196" y1="195" x2="220" y2="195"/>
+    <polyline points="212,187 222,195 212,203"/>
+    <line x1="386" y1="195" x2="410" y2="195"/>
+    <polyline points="402,187 412,195 402,203"/>
+    <line x1="576" y1="195" x2="600" y2="195"/>
+    <polyline points="592,187 602,195 592,203"/>
+  </g>
+
+  <!-- Labels -->
+  <g font-size="21" fill="#232A36" text-anchor="middle">
+    <text x="115" y="318">Paper files</text>
+    <text x="305" y="318">Digital forms</text>
+    <text x="495" y="318">Central database</text>
+    <text x="685" y="318">Live dashboards</text>
+  </g>
+
+  <!-- Outcome pill -->
+  <rect x="140" y="390" width="520" height="60" rx="30" fill="#0A1F33"/>
+  <text x="400" y="429" font-size="23" fill="#FFFFFF" text-anchor="middle">Less admin. Clearer visibility. Room to grow.</text>
+</svg>
