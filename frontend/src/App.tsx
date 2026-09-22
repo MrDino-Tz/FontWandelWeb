@@ -23,6 +23,29 @@ function ScrollToTop() {
   return null;
 }
 
+const pageTitles: [RegExp, string][] = [
+  [/^\/$/, 'FontWandel Technologies Ltd | Enable Digital Transformation'],
+  [/^\/about/, 'About | FontWandel Technologies Ltd'],
+  [/^\/contact/, 'Contact | FontWandel Technologies Ltd'],
+  [/^\/platform/, 'Wandel Suite Products | FontWandel Technologies Ltd'],
+  [/^\/support\/articles\/.+/, 'Guide | FontWandel Technologies Ltd'],
+  [/^\/support\/articles/, 'Training Guides | FontWandel Technologies Ltd'],
+  [/^\/support\/reference\/.+/, 'Documentation | FontWandel Technologies Ltd'],
+  [/^\/support\/reference/, 'Documentation | FontWandel Technologies Ltd'],
+  [/^\/support\/whitepapers/, 'Whitepapers | FontWandel Technologies Ltd'],
+  [/^\/support/, 'Support Center | FontWandel Technologies Ltd'],
+];
+
+function PageTitle() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    document.title =
+      pageTitles.find(([re]) => re.test(pathname))?.[1] ??
+      'FontWandel Technologies Ltd';
+  }, [pathname]);
+  return null;
+}
+
 function PrelineInit() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -41,6 +64,7 @@ export default function App() {
   return (
     <BrowserRouter basename="/FontWandelWeb">
       <ScrollToTop />
+      <PageTitle />
       <PrelineInit />
       <Routes>
         <Route element={<BaseLayout />}>
