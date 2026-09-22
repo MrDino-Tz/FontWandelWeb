@@ -98,7 +98,7 @@ export function KnowledgeBase() {
       <Hero title="Support Center" description="Raise a case, reach our helpdesk, or browse guides and documentation." />
       <section className="mx-auto max-w-[85rem] px-4 pb-24 sm:px-6 lg:px-8 grid gap-4 md:grid-cols-2">
         {all.map((a) => (
-          <Card key={a.slug} to={a.slug.includes('fontwandel') && references.includes(a as never) ? `/support/reference/${a.slug}` : `/support/articles/${a.slug}`} title={a.title} description={a.description} meta={a.date} />
+          <Card key={a.slug} to={references.includes(a) ? `/support/reference/${a.slug}` : `/support/articles/${a.slug}`} title={a.title} description={a.description} meta={a.date} />
         ))}
       </section>
     </>
@@ -106,13 +106,13 @@ export function KnowledgeBase() {
 }
 
 export function Whitepapers() {
-  const items = whitepaperFiles as { title: string; description: string; readLink?: string }[];
+  const items = whitepaperFiles as { title: string; description: string }[];
   return (
     <>
       <Hero title="Whitepapers" description="In-depth reads on digital transformation for busy teams." />
       <section className="mx-auto max-w-[85rem] px-4 pb-24 sm:px-6 lg:px-8 grid gap-4 md:grid-cols-3">
         {items.map((w) => (
-          <Card key={w.title} to={w.readLink ?? '#'} title={w.title} description={w.description} />
+          <Card key={w.title} to="/contact" title={w.title} description={w.description} meta="Full paper available on request" />
         ))}
       </section>
     </>

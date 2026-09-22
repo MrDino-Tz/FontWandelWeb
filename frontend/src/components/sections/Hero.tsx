@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
 
@@ -7,8 +8,8 @@ export function AnnouncementBanner() {
   return (
     <div className="flex justify-center">
       <div className="rounded-xl bg-slate-50 shadow-md">
-        <a
-          href="#"
+        <Link
+          to="/about"
           className="group flex h-9 w-fit items-center justify-center gap-0 rounded-xl transition duration-300"
           aria-label={`${text} - ${linkText}`}
         >
@@ -19,7 +20,7 @@ export function AnnouncementBanner() {
             <span className="text-sm transition duration-300 group-hover:underline">{linkText}</span>
             <Icon name="chevronRight" />
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

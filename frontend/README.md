@@ -1,32 +1,34 @@
-# React + TypeScript + Vite
+# FontWandel Website — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Vite + React 19 + TypeScript + Tailwind CSS 4 + Preline. Multi-page site
+(Routes via `react-router-dom`) for FontWandel Technologies Ltd.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Command         | What it does                                      |
+|-----------------|---------------------------------------------------|
+| `npm install`   | Install dependencies                              |
+| `npm run dev`   | Start dev server (http://localhost:5173/FontWandelWeb/) |
+| `npm run build` | Type-check + production build → `dist/` (also writes `dist/404.html` SPA fallback) |
+| `npm run preview` | Serve the production build locally              |
+| `npm run lint`  | Lint with Oxlint                                  |
 
-## React Compiler
+## Project layout
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/pages/` — routes: Home, About, Contact, Platform (Wandel Suite),
+  support section (guides, documentation, support center, whitepapers), 404.
+- `src/components/` — layout sections (Navbar with mega-menus, Footer,
+  hero, feature sections), UI primitives (Button, Icon), all styling via
+  Tailwind classes.
+- `src/data/` — navigation, mega-menu content, guide/documentation entries,
+  whitepapers.
+- `src/index.css` — Tailwind v4 `@theme` brand tokens (see
+  `../docs/FW-profile/brand-colors.md`), Preline, custom animations.
+- `public/assets/images/` — hand-drawn brand SVG illustrations (+2 photos).
 
-## Expanding the Oxlint configuration
+## Deploy
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Pushing `main` triggers `.github/workflows/deploy.yml`, which builds
+`frontend/` and publishes `dist/` to GitHub Pages (project site
+`https://from-system.github.io/FontWandelWeb/`). Requirements: repo
+Settings → Pages → Source **GitHub Actions**.
