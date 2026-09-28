@@ -4,8 +4,8 @@ import Icon from '../components/ui/Icon';
 const contactDetails = {
   addressLine1: 'Arusha',
   addressLine2: 'Tanzania',
-  phone: '+255 757 830 276',
-  email: 'dbacrisskarengi@outlook.com',
+  phones: ['+255 757 830 276', '+255 792 476 367'],
+  emails: ['Info@fontwandel.co.tz', 'Connect@fontwandel.co.tz'],
 };
 
 export default function Contact() {
@@ -41,12 +41,29 @@ export default function Contact() {
             </div>
           </div>
           <div className="flex gap-x-5">
+            <Icon name="mobile" className="size-6 shrink-0 text-slate-600" />
+            <div className="grow">
+              <h4 className="font-semibold text-slate-600">Call us:</h4>
+              {contactDetails.phones.map((phone) => (
+                <p key={phone}>
+                  <a className="mt-1 text-sm text-slate-500 transition-colors duration-300 hover:text-slate-400 focus:text-slate-400 focus:outline-hidden" href={`tel:${phone.replace(/\s/g, '')}`}>
+                    {phone}
+                  </a>
+                </p>
+              ))}
+            </div>
+          </div>
+          <div className="flex gap-x-5">
             <Icon name="email" className="size-6 shrink-0 text-slate-600" />
             <div className="grow">
               <h4 className="font-semibold text-slate-600">Contact us by email:</h4>
-              <a className="mt-1 text-sm text-slate-500 hover:text-slate-400" href={`mailto:${contactDetails.email}`}>
-                {contactDetails.email}
-              </a>
+              {contactDetails.emails.map((email) => (
+                <p key={email}>
+                  <a className="mt-1 text-sm text-slate-500 transition-colors duration-300 hover:text-slate-400 focus:text-slate-400 focus:outline-hidden" href={`mailto:${email.toLowerCase()}`}>
+                    {email}
+                  </a>
+                </p>
+              ))}
             </div>
           </div>
           <div className="flex gap-x-5">

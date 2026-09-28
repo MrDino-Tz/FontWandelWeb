@@ -6,8 +6,8 @@ const companyDescription =
 
 const contactDetails = {
   address: 'Arusha, Tanzania',
-  phone: '+255 757 830 276',
-  email: 'dbacrisskarengi@outlook.com',
+  phones: ['+255 757 830 276', '+255 792 476 367'],
+  emails: ['Info@fontwandel.co.tz', 'Connect@fontwandel.co.tz'],
 };
 
 const copyrightYear = new Date().getFullYear();
@@ -29,8 +29,20 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2 xl:col-span-1 xl:col-start-3 text-sm text-slate-600">
             <p className="font-semibold text-slate-700 mb-2">Contact</p>
             <p>{contactDetails.address}</p>
-            <p>{contactDetails.phone}</p>
-            <p>{contactDetails.email}</p>
+            {contactDetails.phones.map((phone) => (
+              <p key={phone}>
+                <a href={`tel:${phone.replace(/\s/g, '')}`} className="transition hover:text-teal-700">
+                  {phone}
+                </a>
+              </p>
+            ))}
+            {contactDetails.emails.map((email) => (
+              <p key={email}>
+                <a href={`mailto:${email.toLowerCase()}`} className="transition hover:text-teal-700">
+                  {email}
+                </a>
+              </p>
+            ))}
           </div>
           <div id="subscribe" className="col-span-2 md:col-span-3 xl:col-span-2 scroll-mt-32">
             <h3 className="font-semibold text-slate-700">More information?</h3>
