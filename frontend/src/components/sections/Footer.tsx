@@ -1,18 +1,15 @@
 import { Link } from 'react-router-dom';
-
-const companyName = 'FontWandel Technologies Ltd.';
-const companyDescription =
-  'FontWandel Technologies Ltd. is a digital transformation and innovation company enabling organizations to embrace secure, connected technology.';
-
-const contactDetails = {
-  address: 'Arusha, Tanzania',
-  phones: ['+255 757 830 276', '+255 792 476 367'],
-  emails: ['Info@fontwandel.co.tz', 'Connect@fontwandel.co.tz'],
-};
+import { useContent } from '../../admin/store';
 
 const copyrightYear = new Date().getFullYear();
 
 export default function Footer() {
+  const { content } = useContent();
+  const { companyName, description } = content.footer;
+  const lines = content.contact.channels.flatMap((c) => c.lines);
+  const phones = lines.filter((l) => l.href.startsWith('tel:'));
+  const emails = lines.filter((l) => l.href.startsWith('mailto:'));
+
   return (
     <footer className="mt-auto w-full bg-linear-to-t from-teal-200 via-transparent to-white pb-10">
       <div className="mx-auto mt-auto w-full max-w-[85rem] px-4 pb-10 sm:px-6 lg:px-8">
@@ -23,23 +20,23 @@ export default function Footer() {
               {companyName}
             </Link>
             <p className="mt-5 text-pretty text-slate-600 lg:w-5/12 xl:w-10/12">
-              {companyDescription}
+              {description}
             </p>
           </div>
           <div className="col-span-1 md:col-span-2 xl:col-span-1 xl:col-start-3 text-sm text-slate-600">
             <p className="font-semibold text-slate-700 mb-2">Contact</p>
-            <p>{contactDetails.address}</p>
-            {contactDetails.phones.map((phone) => (
-              <p key={phone}>
-                <a href={`tel:${phone.replace(/\s/g, '')}`} className="transition hover:text-teal-700">
-                  {phone}
+            <p>Arusha, Tanzania</p>
+            {phones.map((phone) => (
+              <p key={phone.label}>
+                <a href={phone.href} className="transition hover:text-teal-700">
+                  {phone.label}
                 </a>
               </p>
             ))}
-            {contactDetails.emails.map((email) => (
-              <p key={email}>
-                <a href={`mailto:${email.toLowerCase()}`} className="transition hover:text-teal-700">
-                  {email}
+            {emails.map((email) => (
+              <p key={email.label}>
+                <a href={email.href} className="transition hover:text-teal-700">
+                  {email.label}
                 </a>
               </p>
             ))}
@@ -69,6 +66,11 @@ export default function Footer() {
         <div className="grid gap-y-2 sm:flex sm:items-center sm:justify-between sm:gap-y-0">
           <p className="text-sm font-medium text-slate-600">
             &copy; {copyrightYear} {companyName} All rights reserved.
+          </p>
+          <p className="text-sm text-slate-500">
+            <Link to="/fontadmin/login" className="underline-offset-4 transition hover:text-teal-700 hover:underline">
+              Admin
+            </Link>
           </p>
         </div>
       </div>

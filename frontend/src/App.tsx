@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Platform from './pages/Platform';
+import Admin from './pages/admin/Admin';
+import Login from './pages/admin/Login';
 import {
   ArticlesIndex,
   ArticleDetail,
@@ -28,6 +30,7 @@ const pageTitles: [RegExp, string][] = [
   [/^\/about/, 'About | FontWandel Technologies Ltd'],
   [/^\/contact/, 'Contact | FontWandel Technologies Ltd'],
   [/^\/platform/, 'Wandel Suite Products | FontWandel Technologies Ltd'],
+  [/^\/fontadmin/, 'Site Admin | FontWandel Technologies Ltd'],
   [/^\/support\/articles\/.+/, 'Guide | FontWandel Technologies Ltd'],
   [/^\/support\/articles/, 'Training Guides | FontWandel Technologies Ltd'],
   [/^\/support\/reference\/.+/, 'Documentation | FontWandel Technologies Ltd'],
@@ -67,6 +70,8 @@ export default function App() {
       <PageTitle />
       <PrelineInit />
       <Routes>
+        <Route path="fontadmin/login" element={<Login />} />
+        <Route path="fontadmin" element={<Admin />} />
         <Route element={<BaseLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />

@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
 import Icon from '../components/ui/Icon';
-
-const contactDetails = {
-  addressLine1: 'Arusha',
-  addressLine2: 'Tanzania',
-  phones: ['+255 757 830 276', '+255 792 476 367'],
-  emails: ['Info@fontwandel.co.tz', 'Connect@fontwandel.co.tz'],
-};
+import { useContent } from '../admin/store';
 
 export default function Contact() {
+  const { content } = useContent();
+  const lines = content.contact.channels.flatMap((c) => c.lines);
+  const phones = lines.filter((l) => l.href.startsWith('tel:'));
+  const emails = lines.filter((l) => l.href.startsWith('mailto:'));
   return (
     <div className="mx-auto max-w-[85rem] px-4 pt-48 pb-28 sm:px-6 lg:px-8">
       <div className="mb-10 max-w-3xl lg:mb-14">
@@ -34,9 +32,9 @@ export default function Contact() {
             <div className="grow">
               <h4 className="font-semibold text-slate-600">Our address:</h4>
               <address className="mt-1 text-sm text-slate-500 not-italic">
-                {contactDetails.addressLine1}
+                Arusha
                 <br />
-                {contactDetails.addressLine2}
+                Tanzania
               </address>
             </div>
           </div>
@@ -44,10 +42,10 @@ export default function Contact() {
             <Icon name="mobile" className="size-6 shrink-0 text-slate-600" />
             <div className="grow">
               <h4 className="font-semibold text-slate-600">Call us:</h4>
-              {contactDetails.phones.map((phone) => (
-                <p key={phone}>
-                  <a className="mt-1 text-sm text-slate-500 transition-colors duration-300 hover:text-slate-400 focus:text-slate-400 focus:outline-hidden" href={`tel:${phone.replace(/\s/g, '')}`}>
-                    {phone}
+              {phones.map((phone) => (
+                <p key={phone.label}>
+                  <a className="mt-1 text-sm text-slate-500 transition-colors duration-300 hover:text-slate-400 focus:text-slate-400 focus:outline-hidden" href={phone.href}>
+                    {phone.label}
                   </a>
                 </p>
               ))}
@@ -57,10 +55,10 @@ export default function Contact() {
             <Icon name="email" className="size-6 shrink-0 text-slate-600" />
             <div className="grow">
               <h4 className="font-semibold text-slate-600">Contact us by email:</h4>
-              {contactDetails.emails.map((email) => (
-                <p key={email}>
-                  <a className="mt-1 text-sm text-slate-500 transition-colors duration-300 hover:text-slate-400 focus:text-slate-400 focus:outline-hidden" href={`mailto:${email.toLowerCase()}`}>
-                    {email}
+              {emails.map((email) => (
+                <p key={email.label}>
+                  <a className="mt-1 text-sm text-slate-500 transition-colors duration-300 hover:text-slate-400 focus:text-slate-400 focus:outline-hidden" href={email.href}>
+                    {email.label}
                   </a>
                 </p>
               ))}

@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
+import { useContent } from '../../admin/store';
 
 export function AnnouncementBanner() {
-  const text = 'FontWandel Technologies Ltd';
-  const linkText = 'Bridging Organizations to Digital Transformation';
+  const { content } = useContent();
+  const { bannerText: text, bannerLinkText: linkText, bannerTo } = content.hero;
   return (
     <div className="flex justify-center">
       <div className="rounded-xl bg-slate-50 shadow-md">
         <Link
-          to="/about"
+          to={bannerTo}
           className="group flex h-9 w-fit items-center justify-center gap-0 rounded-xl transition duration-300"
           aria-label={`${text} - ${linkText}`}
         >
@@ -27,21 +28,23 @@ export function AnnouncementBanner() {
 }
 
 export function HeroContent() {
+  const { content } = useContent();
+  const hero = content.hero;
   return (
     <>
       <div className="mx-auto max-w-4xl text-left select-none sm:text-center">
         <h1 className="block text-4xl text-balance text-slate-800 sm:text-5xl md:text-6xl lg:text-7xl">
-          Enable Digital Transformation for Economy Shift
+          {hero.title}
         </h1>
       </div>
       <div className="mx-auto max-w-3xl text-left sm:text-center">
         <p className="text-lg text-pretty text-slate-700">
-          We work with organizations, businesses, institutions, and communities to turn digital challenges into practical, connected, and secure solutions — from software development and cybersecurity to data intelligence, digital platforms, and payment integrations.
+          {hero.subtitle}
         </p>
       </div>
       <div className="flex flex-col justify-center gap-5 sm:flex-row">
-        <Button to="/contact" variant="secondary">Get in Touch</Button>
-        <Button to="/about" variant="primary">Discover FontWandel</Button>
+        <Button to={hero.secondaryBtn.to} variant="secondary">{hero.secondaryBtn.label}</Button>
+        <Button to={hero.primaryBtn.to} variant="primary">{hero.primaryBtn.label}</Button>
       </div>
     </>
   );

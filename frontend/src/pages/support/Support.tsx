@@ -121,7 +121,7 @@ export function Whitepapers() {
 
 export function NotFound() {
   return (
-    <section className="mx-auto max-w-[85rem] px-4 pt-48 pb-32 text-center sm:px-6 lg:px-8">
+    <section className="mx-auto flex min-h-screen w-full max-w-[85rem] flex-col items-center justify-center px-4 text-center sm:px-6 lg:px-8">
       <h1 className="text-6xl font-bold text-slate-800">404</h1>
       <p className="mt-4 text-slate-600">Page not found.</p>
       <div className="mt-8">
