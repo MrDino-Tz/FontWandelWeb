@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useContent } from '../../admin/store';
+import { asset } from '../../utils/base';
 
 const copyrightYear = new Date().getFullYear();
 
@@ -16,8 +17,14 @@ export default function Footer() {
         <hr className="mb-10 border-slate-200" />
         <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
           <div className="col-span-full self-center xl:col-span-2">
-            <Link to="/" className="flex-none text-xl font-semibold text-slate-700 uppercase">
-              {companyName}
+            <Link to="/" className="flex-none" aria-label="FontWandel home">
+              <img
+                src={asset('/FontwandelLogo.png')}
+                alt={companyName}
+                className="h-16 w-auto rounded-xl"
+                width={96}
+                height={64}
+              />
             </Link>
             <p className="mt-5 text-pretty text-slate-600 lg:w-5/12 xl:w-10/12">
               {description}

@@ -1,0 +1,5 @@
+fastapi>=0.136
+uvicorn[standard]>=0.49
+pydantic-settings>=2.14
+itsdangerous>=2.2
+email-validator>=2.2

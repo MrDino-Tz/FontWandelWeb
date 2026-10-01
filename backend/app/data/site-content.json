@@ -1,0 +1,201 @@
+{
+  "hero": {
+    "bannerText": "FontWandel Technologies Ltd",
+    "bannerLinkText": "Bridging Organizations to Digital Transformation",
+    "bannerTo": "/about",
+    "title": "Enable Digital Transformation for Economy Shift",
+    "subtitle": "We work with organizations, businesses, institutions, and communities to turn digital challenges into practical, connected, and secure solutions — from software development and cybersecurity to data intelligence, digital platforms, and payment integrations.",
+    "primaryBtn": {
+      "label": "Discover FontWandel",
+      "to": "/about"
+    },
+    "secondaryBtn": {
+      "label": "Get in Touch",
+      "to": "/contact"
+    }
+  },
+  "homeLayout": [
+    {
+      "id": "hero",
+      "visible": true
+    },
+    {
+      "id": "showcase",
+      "visible": true
+    },
+    {
+      "id": "animated",
+      "visible": true
+    },
+    {
+      "id": "grid",
+      "visible": true
+    },
+    {
+      "id": "cta",
+      "visible": true
+    },
+    {
+      "id": "contact",
+      "visible": true
+    }
+  ],
+  "showcase": {
+    "heading": "Our core services",
+    "sub": "Six connected services that replace fragmented, manual processes with secure digital operations.",
+    "moreTitle": "And more...",
+    "items": [
+      {
+        "title": "Digital Transformation & Business Automation",
+        "description": "Turning manual, paper- and spreadsheet-based operations into connected digital workflows — process digitization, digital forms and approvals, CRM and ERP systems, and document management.",
+        "image": "/assets/images/automation-workflow.svg",
+        "bullets": []
+      },
+      {
+        "title": "Systems & Web Development",
+        "description": "End-to-end design and development of custom systems, business websites, and mobile applications — from corporate, NGO, school, and church sites to e-commerce, booking, portals, and SaaS platforms.",
+        "image": "/assets/images/graph.webp",
+        "bullets": []
+      },
+      {
+        "title": "IT Maintenance & Infrastructure",
+        "description": "Your on-call IT vendor for offices, schools, SMEs, and corporates — installations and support, server and network infrastructure, cloud solutions and backup, helpdesk, CCTV servicing, and hardware supply.",
+        "image": "/assets/images/dashboard.webp",
+        "bullets": []
+      },
+      {
+        "title": "Cybersecurity Solutions",
+        "description": "",
+        "bullets": [
+          "Cybersecurity Solutions — assessments, network and endpoint security, and awareness training, built in by design",
+          "Digital Payments & Systems Integration — mobile-money, billing and subscriptions, reconciliation, and API integrations",
+          "Data, Analytics & Intelligence — data collection and MIS, dashboards and BI, automated reporting and KPI tracking"
+        ]
+      }
+    ]
+  },
+  "grid": {
+    "lead": "Why choose ",
+    "accentA": "Font",
+    "accentB": "Wandel",
+    "suffix": "?",
+    "intro": "One technology partner for your systems, infrastructure, and cybersecurity — solutions built around your actual operations, secure by design, and ready to scale with you.",
+    "cards": [
+      {
+        "heading": "One technology partner",
+        "description": "Systems, infrastructure, and cybersecurity from a single partner — no juggling vendors, no disconnected tools.",
+        "icon": "cursorRays"
+      },
+      {
+        "heading": "Built around your operations",
+        "description": "Solutions mapped to your actual operations, not generic templates — connected systems instead of one-off, siloed tools.",
+        "icon": "cog"
+      },
+      {
+        "heading": "Secure and scalable by design",
+        "description": "Security built in from the ground up, on solutions that grow from a single SME to a multi-branch corporate or government office.",
+        "icon": "puzzle"
+      }
+    ]
+  },
+  "animated": {
+    "title": "From discovery to ongoing support",
+    "sub": "We understand your operational problems first, then apply technology to solve them — and stay with you long after go-live.",
+    "cta": {
+      "label": "Learn More",
+      "to": "/about"
+    },
+    "cards": [
+      "Discover & design — we study your operations, then map the right solution.",
+      "Build & secure — we develop and deploy with cybersecurity by design.",
+      "Optimize — we monitor, refine, and scale with you over time."
+    ]
+  },
+  "cta": {
+    "line1": "Transform your business today.",
+    "lead": "Get started with ",
+    "accentA": "Font",
+    "accentB": "Wandel",
+    "sub": "Tell us about your operations — we'll map the right digital solution and walk with you from discovery to ongoing support.",
+    "btn": {
+      "label": "Get in Touch",
+      "to": "/contact"
+    }
+  },
+  "about": {
+    "title": "FontWandel Technologies",
+    "description": "is a digital transformation and innovation company committed to enabling a more digitally empowered future. We believe technology is more than a tool — it is a catalyst for transforming how organizations operate, how people connect, how decisions are made, and how opportunities are created.",
+    "stats": [
+      {
+        "label": "Core services",
+        "value": "6"
+      },
+      {
+        "label": "Wandel Suite products live",
+        "value": "4"
+      },
+      {
+        "label": "Sectors served",
+        "value": "7"
+      }
+    ],
+    "foundationTitle": "What drives us:",
+    "foundation": [
+      {
+        "title": "Our vision:",
+        "description": "Fostering a digital enabled economy where innovation and technology accelerate sustainable growth, opportunities, and transformation."
+      },
+      {
+        "title": "Our mission:",
+        "description": "To enable organizations and communities to embrace digital transformation by delivering innovative, secure, and connected technology solutions that improve productivity, unlock opportunity, and accelerate sustainable growth."
+      },
+      {
+        "title": "Our values — F.O.N.T:",
+        "description": "Forward Thinking, Ownership, Nurturing Innovation, and Trust — anticipating emerging technology shifts, taking full accountability for outcomes, continuously improving what we ship, and earning long-term partnerships through reliability and transparency."
+      }
+    ],
+    "leadershipTitle": "Leadership",
+    "leadership": [
+      "FontWandel is run by a lean team of 9 — 6 working team members delivering development, IT support, and cybersecurity services, and 3 board members providing strategic guidance and oversight.",
+      "Chrispin Silvery Karengi — Founder & Technical Director. A BSc Cybersecurity and Information Technology graduate, leading FontWandel’s strategic direction and technical delivery, from systems architecture and cybersecurity to the rollout of digital transformation projects for government institutions, schools, SMEs, and corporate organizations. Areas of focus: Cybersecurity, Systems Architecture, Digital Strategy, IT Infrastructure."
+    ]
+  },
+  "contact": {
+    "heading": "Get in touch",
+    "intro": "Based in Arusha, Tanzania — reach out for general inquiries, or raise a support case directly with our team.",
+    "channels": [
+      {
+        "title": "General inquiries",
+        "icon": "email",
+        "lines": [
+          {
+            "label": "Info@fontwandel.co.tz",
+            "href": "mailto:info@fontwandel.co.tz"
+          },
+          {
+            "label": "+255 757 830 276",
+            "href": "tel:+255757830276"
+          }
+        ]
+      },
+      {
+        "title": "Support & cases",
+        "icon": "chatBubble",
+        "lines": [
+          {
+            "label": "Connect@fontwandel.co.tz",
+            "href": "mailto:connect@fontwandel.co.tz"
+          },
+          {
+            "label": "+255 792 476 367",
+            "href": "tel:+255792476367"
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "companyName": "FontWandel Technologies Ltd.",
+    "description": "FontWandel Technologies Ltd. is a digital transformation and innovation company enabling organizations to embrace secure, connected technology."
+  }
+}

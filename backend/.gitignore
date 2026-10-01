@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+app/data/content-live.json
+app/data/messages.json

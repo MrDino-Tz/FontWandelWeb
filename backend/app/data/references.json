@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "fontwandel-service-catalog",
+    "title": "FontWandel Service Catalog",
+    "description": "The six core services at a glance.",
+    "date": "2025-01-20",
+    "body": [
+      "FontWandel’s work is organized into six core services: Digital Transformation & Business Automation; Systems & Web Development; IT Office Maintenance & Infrastructure Servicing; Cybersecurity Solutions; Digital Payments & Systems Integration; and Data, Analytics & Intelligence.",
+      "Distinct from bespoke services, Wandel Suite is our line of ready-to-deploy products — Net Kitonga, Duka Kamili, SmrtEvent, and Foleni Kiganjani — sold or licensed directly to businesses. To engage us, start with a conversation: contact us and we will map the right solution through Discover, Design, Build, Secure, and Optimize."
+    ]
+  },
+  {
+    "slug": "getting-started-with-fontwandel",
+    "title": "Getting Started with FontWandel",
+    "description": "How an engagement runs, from first call to ongoing support.",
+    "date": "2025-01-15",
+    "body": [
+      "Every engagement follows five steps. Discover: we study your operations and pain points. Design: we map the right digital solution to the real problem. Build: we develop and deploy the system. Secure: cybersecurity is applied by design. Optimize: we monitor, refine, and scale over time.",
+      "After go-live, support continues through FontWandel Connect — raise any case by email — plus helpdesk assistance remote and on-site, and staff training so your team owns the system with confidence."
+    ]
+  },
+  {
+    "slug": "working-with-your-new-system",
+    "title": "Working With Your New System",
+    "description": "Roles, habits, and review rhythms after go-live.",
+    "date": "2025-01-10",
+    "body": [
+      "A new system succeeds when people know their part: who submits, who approves, who reviews exceptions, and who calls support. Define these roles on day one and revisit them as the team changes.",
+      "Keep a weekly review rhythm — exceptions, pending approvals, and one KPI that matters — and raise support cases early rather than working around problems. Small issues reported fast stay small."
+    ]
+  }
+]

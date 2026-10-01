@@ -251,10 +251,16 @@ export default function Navbar() {
         <div className="flex items-center justify-between gap-x-1">
           <Link
             to="/"
-            className="dm-sans flex-none text-2xl font-light text-slate-400 focus:opacity-80 focus:outline-hidden"
+            className="flex-none focus:opacity-80 focus:outline-hidden"
             aria-label="FontWandel Logo"
           >
-            <span className="font-semibold text-navy-800">Font</span>Wandel
+            <img
+              src={asset('/FontwandelLogo.png')}
+              alt="FontWandel Technologies Ltd"
+              className="h-12 w-auto rounded-lg"
+              width={72}
+              height={48}
+            />
           </Link>
           <button
             type="button"
