@@ -550,10 +550,27 @@ function FooterEditor() {
 
 export default function Admin() {
   const [section, setSection] = useState<SectionKey>('hero');
-  const { reset } = useContent();
-  const { isAuthed, logout } = useAuth();
+  const { reset, sync } = useContent();
+  const { isAuthed, ready, logout } = useAuth();
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-off-white text-sm text-slate-500">
+        Checking session…
+      </div>
+    );
+  }
 
   if (!isAuthed) return <Navigate to="/fontadmin/login" replace />;
+
+  const syncLabel =
+    sync === 'saving'
+      ? 'Saving…'
+      : sync === 'saved'
+        ? 'All changes saved.'
+        : sync === 'error'
+          ? 'Could not save to the server.'
+          : '';
 
   return (
     <div className="flex min-h-screen bg-off-white">
@@ -613,7 +630,17 @@ export default function Admin() {
               {SECTIONS.find((s) => s.key === section)?.label}
             </h1>
             <p className="mt-1 text-sm text-slate-500">
-              Changes save automatically in this browser and appear on the site instantly.
+              Changes save automatically to the server and appear on the site
+              instantly.{' '}
+              {syncLabel && (
+                <span
+                  className={
+                    sync === 'error' ? 'font-medium text-red-600' : 'text-teal-700'
+                  }
+                >
+                  {syncLabel}
+                </span>
+              )}
             </p>
           </div>
           <div className="space-y-5">

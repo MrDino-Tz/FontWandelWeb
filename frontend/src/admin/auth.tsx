@@ -2,62 +2,68 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
-
-// ---------------------------------------------------------------------------
-// DEMO ONLY — mocked credentials, no backend. Do not use in production.
-//   username: admin
-//   password: fontwandel123
-// ---------------------------------------------------------------------------
-const DEMO_USER = 'admin';
-const DEMO_PASS = 'fontwandel123';
-
-const SESSION_KEY = 'fontwandel-admin-session';
+import { apiGet, apiSend, ApiError } from '../api';
 
 interface AuthStore {
   isAuthed: boolean;
-  login: (username: string, password: string) => boolean;
+  /** True once the session check against the backend has finished. */
+  ready: boolean;
+  /** Resolves false on bad credentials; throws ApiError/network errors. */
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const Ctx = createContext<AuthStore | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthed, setIsAuthed] = useState<boolean>(() => {
-    try {
-      return sessionStorage.getItem(SESSION_KEY) === '1';
-    } catch {
-      return false;
-    }
-  });
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [ready, setReady] = useState(false);
 
-  const login = useCallback((username: string, password: string) => {
-    const ok =
-      username.trim() === DEMO_USER && password === DEMO_PASS;
-    if (ok) {
-      try {
-        sessionStorage.setItem(SESSION_KEY, '1');
-      } catch {
-        /* storage unavailable */
-      }
+  useEffect(() => {
+    let cancelled = false;
+    apiGet<{ authenticated: boolean }>('/auth/me')
+      .then(() => {
+        if (!cancelled) setIsAuthed(true);
+      })
+      .catch(() => {
+        if (!cancelled) setIsAuthed(false);
+      })
+      .finally(() => {
+        if (!cancelled) setReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const login = useCallback(async (username: string, password: string) => {
+    try {
+      await apiSend<{ authenticated: boolean }>('POST', '/auth/login', {
+        username,
+        password,
+      });
       setIsAuthed(true);
+      return true;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) return false;
+      throw err;
     }
-    return ok;
   }, []);
 
   const logout = useCallback(() => {
-    try {
-      sessionStorage.removeItem(SESSION_KEY);
-    } catch {
-      /* storage unavailable */
-    }
+    apiSend<{ authenticated: boolean }>('POST', '/auth/logout').catch(() => {});
     setIsAuthed(false);
   }, []);
 
-  const value = useMemo(() => ({ isAuthed, login, logout }), [isAuthed, login, logout]);
+  const value = useMemo(
+    () => ({ isAuthed, ready, login, logout }),
+    [isAuthed, ready, login, logout],
+  );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

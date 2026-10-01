@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../admin/auth';
+import { ApiError } from '../../api';
 
 export default function Login() {
   const { login, isAuthed } = useAuth();
@@ -9,14 +10,27 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(username, password)) {
-      setError('');
-      navigate('/fontadmin', { replace: true });
-    } else {
-      setError('Invalid username or password.');
+    if (busy) return;
+    setBusy(true);
+    try {
+      if (await login(username, password)) {
+        setError('');
+        navigate('/fontadmin', { replace: true });
+      } else {
+        setError('Invalid username or password.');
+      }
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : 'Cannot reach the server. Is the backend running?',
+      );
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -84,9 +98,10 @@ export default function Login() {
           </label>
           <button
             type="submit"
-            className="mt-5 w-full rounded-lg bg-gold-500 px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-gold-600"
+            disabled={busy}
+            className="mt-5 w-full rounded-lg bg-gold-500 px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-gold-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Log in
+            {busy ? 'Logging in…' : 'Log in'}
           </button>
           <p className="mt-4 text-center text-sm">
             <Link to="/" className="text-slate-500 underline-offset-4 hover:text-teal-700 hover:underline">

@@ -2,11 +2,14 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import type { IconName } from '../components/ui/Icon';
+import { apiGet, apiSend } from '../api';
 
 const STORAGE_KEY = 'fontwandel-site-content-v1';
 
@@ -373,8 +376,11 @@ function setIn<T>(obj: T, path: Path, value: unknown): T {
   return clone as T;
 }
 
+export type SyncStatus = 'idle' | 'saving' | 'saved' | 'error';
+
 interface Store {
   content: SiteContent;
+  sync: SyncStatus;
   set: (path: Path, value: unknown) => void;
   push: <T>(path: Path, item: T) => void;
   removeAt: (path: Path, index: number) => void;
@@ -385,90 +391,105 @@ interface Store {
 
 const Ctx = createContext<Store | null>(null);
 
+const SAVE_DEBOUNCE_MS = 500;
+
 export function SiteContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>(load);
+  const [sync, setSync] = useState<SyncStatus>('idle');
+  const contentRef = useRef<SiteContent>(content);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const set = useCallback((path: Path, value: unknown) => {
-    setContent((prev) => {
-      const next = setIn(prev, path, value);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* storage unavailable */
-      }
-      return next;
-    });
+  const apply = useCallback((next: SiteContent) => {
+    contentRef.current = next;
+    setContent(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      /* storage unavailable */
+    }
+    setSync('saving');
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      apiSend<SiteContent>('PUT', '/content', next)
+        .then(() => setSync('saved'))
+        .catch(() => setSync('error'));
+    }, SAVE_DEBOUNCE_MS);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    apiGet<Partial<SiteContent>>('/content')
+      .then((data) => {
+        if (cancelled) return;
+        const merged = { ...defaults, ...data } as SiteContent;
+        if (!merged.hero || !merged.homeLayout) return;
+        contentRef.current = merged;
+        setContent(merged);
+      })
+      .catch(() => {
+        /* backend unreachable — keep the localStorage copy */
+      });
+    return () => {
+      cancelled = true;
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, []);
+
+  const set = useCallback(
+    (path: Path, value: unknown) => {
+      apply(setIn(contentRef.current, path, value));
+    },
+    [apply],
+  );
 
   const push = useCallback(
     <T,>(path: Path, item: T) => {
-      setContent((prev) => {
-        const arr = path.reduce<unknown>(
-          (acc, key) => (acc as Record<string, unknown>)[key as string],
-          prev,
-        ) as unknown[];
-        const next = setIn(prev, path, [...arr, item]);
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-        } catch {
-          /* storage unavailable */
-        }
-        return next;
-      });
-    },
-    [],
-  );
-
-  const removeAt = useCallback((path: Path, index: number) => {
-    setContent((prev) => {
       const arr = path.reduce<unknown>(
         (acc, key) => (acc as Record<string, unknown>)[key as string],
-        prev,
+        contentRef.current,
       ) as unknown[];
-      const next = setIn(
-        prev,
-        path,
-        arr.filter((_, i) => i !== index),
+      apply(setIn(contentRef.current, path, [...arr, item]));
+    },
+    [apply],
+  );
+
+  const removeAt = useCallback(
+    (path: Path, index: number) => {
+      const arr = path.reduce<unknown>(
+        (acc, key) => (acc as Record<string, unknown>)[key as string],
+        contentRef.current,
+      ) as unknown[];
+      apply(
+        setIn(
+          contentRef.current,
+          path,
+          arr.filter((_, i) => i !== index),
+        ),
       );
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* storage unavailable */
-      }
-      return next;
-    });
-  }, []);
+    },
+    [apply],
+  );
 
-  const moveHomeSection = useCallback((index: number, dir: -1 | 1) => {
-    setContent((prev) => {
-      const order = [...prev.homeLayout];
+  const moveHomeSection = useCallback(
+    (index: number, dir: -1 | 1) => {
+      const order = [...contentRef.current.homeLayout];
       const j = index + dir;
-      if (j < 0 || j >= order.length) return prev;
+      if (j < 0 || j >= order.length) return;
       [order[index], order[j]] = [order[j], order[index]];
-      const next = { ...prev, homeLayout: order };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* storage unavailable */
-      }
-      return next;
-    });
-  }, []);
+      apply({ ...contentRef.current, homeLayout: order });
+    },
+    [apply],
+  );
 
-  const toggleHomeSection = useCallback((index: number) => {
-    setContent((prev) => {
-      const order = prev.homeLayout.map((item, i) =>
+  const toggleHomeSection = useCallback(
+    (index: number) => {
+      const order = contentRef.current.homeLayout.map((item, i) =>
         i === index ? { ...item, visible: !item.visible } : item,
       );
-      const next = { ...prev, homeLayout: order };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* storage unavailable */
-      }
-      return next;
-    });
-  }, []);
+      apply({ ...contentRef.current, homeLayout: order });
+    },
+    [apply],
+  );
 
   const reset = useCallback(() => {
     try {
@@ -476,12 +497,32 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
     } catch {
       /* storage unavailable */
     }
-    setContent(defaults);
+    if (saveTimer.current) {
+      clearTimeout(saveTimer.current);
+      saveTimer.current = null;
+    }
+    const show = (next: SiteContent) => {
+      contentRef.current = next;
+      setContent(next);
+      setSync('idle');
+    };
+    apiSend<SiteContent>('POST', '/content/reset')
+      .then((data) => show({ ...defaults, ...data } as SiteContent))
+      .catch(() => show(defaults));
   }, []);
 
   const value = useMemo(
-    () => ({ content, set, push, removeAt, moveHomeSection, toggleHomeSection, reset }),
-    [content, set, push, removeAt, moveHomeSection, toggleHomeSection, reset],
+    () => ({
+      content,
+      sync,
+      set,
+      push,
+      removeAt,
+      moveHomeSection,
+      toggleHomeSection,
+      reset,
+    }),
+    [content, sync, set, push, removeAt, moveHomeSection, toggleHomeSection, reset],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

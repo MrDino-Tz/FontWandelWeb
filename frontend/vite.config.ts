@@ -7,4 +7,10 @@ export default defineConfig({
   // Project site: https://from-system.github.io/FontWandelWeb/
   base: '/FontWandelWeb/',
   plugins: [react(), tailwindcss()],
+  server: {
+    // Proxy API calls to the FastAPI backend during `npm run dev`
+    proxy: {
+      '/api': 'http://127.0.0.1:8000',
+    },
+  },
 })
