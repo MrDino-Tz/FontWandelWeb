@@ -499,4 +499,141 @@ export const Icons = {
     strokeLinejoin: 'round',
     stroke: 'currentColor',
   },
+  heart: {
+    paths: [
+      {
+        d: 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
+  store: {
+    paths: [
+      {
+        d: 'M4 9l1.5-5h13L20 9',
+      },
+      {
+        d: 'M4 9v11h16V9',
+      },
+      {
+        d: 'M4 9h16',
+      },
+      {
+        d: 'M10 20v-6h4v6',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
+  graduationCap: {
+    paths: [
+      {
+        d: 'M22 9L12 4 2 9l10 5 10-5z',
+      },
+      {
+        d: 'M6 11.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5',
+      },
+      {
+        d: 'M22 9v5',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
+  church: {
+    paths: [
+      {
+        d: 'M12 1v3M10.5 2h3',
+      },
+      {
+        d: 'M9 21V9l3-5 3 5v12',
+      },
+      {
+        d: 'M10.5 21v-4h3v4',
+      },
+      {
+        d: 'M5 21h14',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
+  landmark: {
+    paths: [
+      {
+        d: 'M12 3l9 6H3l9-6z',
+      },
+      {
+        d: 'M6 18v-7M10 18v-7M14 18v-7M18 18v-7',
+      },
+      {
+        d: 'M4 18h16',
+      },
+      {
+        d: 'M3 21h18',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
+  palmTree: {
+    paths: [
+      {
+        d: 'M12 21v-9',
+      },
+      {
+        d: 'M12 12C8 12 5 9.5 4 6c3.5 0 6.5 1.5 8 4 1.5-2.5 4.5-4 8-4-1 3.5-4 6-8 6z',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
+  medicalCross: {
+    paths: [
+      {
+        d: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',
+      },
+      {
+        d: 'M12 8v8M8 12h8',
+      },
+    ],
+    class: 'size-7 text-teal-700',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    stroke: 'currentColor',
+  },
 };

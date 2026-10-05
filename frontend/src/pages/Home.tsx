@@ -1,5 +1,6 @@
 import { HeroSection } from '../components/sections/Hero';
 import { FeatureShowcase, FeatureAnimated, FeatureGrid, CTA } from '../components/sections/Features';
+import { SectorsSection, PartnersSection } from '../components/sections/Trust';
 import ContactSection from '../components/sections/ContactSection';
 import { useContent, type HomeSectionId } from '../admin/store';
 import type { JSX } from 'react';
@@ -9,6 +10,8 @@ const sections: Record<HomeSectionId, () => JSX.Element> = {
   showcase: FeatureShowcase,
   animated: FeatureAnimated,
   grid: FeatureGrid,
+  sectors: SectorsSection,
+  partners: PartnersSection,
   cta: CTA,
   contact: ContactSection,
 };

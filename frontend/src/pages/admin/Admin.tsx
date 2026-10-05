@@ -15,6 +15,8 @@ const SECTION_NAMES: Record<HomeSectionId, string> = {
   showcase: 'Services Showcase',
   animated: 'Process Panel',
   grid: 'Why-Us Grid',
+  sectors: 'Sectors',
+  partners: 'Partners',
   cta: 'CTA Banner',
   contact: 'Contact Section',
 };
@@ -413,6 +415,82 @@ function GridEditor() {
   );
 }
 
+function SectorsEditor() {
+  const { content, set, push, removeAt } = useContent();
+  const s = content.sectors;
+  const moveItem = (i: number, dir: -1 | 1) =>
+    set(['sectors', 'items'], moveInList(s.items, i, dir));
+  return (
+    <Card title="Sectors" hint="Who-we-serve cards. The first three loop left, the rest loop right.">
+      <Field label="Heading">
+        <input className={inputCls} value={s.heading} onChange={(e) => set(['sectors', 'heading'], e.target.value)} />
+      </Field>
+      <Field label="Subheading">
+        <textarea className={inputCls} rows={2} value={s.sub} onChange={(e) => set(['sectors', 'sub'], e.target.value)} />
+      </Field>
+      <ListShell
+        addLabel="Add sector"
+        onAdd={() => push(['sectors', 'items'], { name: 'New sector', icon: 'info' as const })}
+      >
+        {s.items.map((item, i) => (
+          <ItemShell key={i} index={i} total={s.items.length} onRemove={() => removeAt(['sectors', 'items'], i)} onMove={(d) => moveItem(i, d)}>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label={`Sector ${i + 1}`}>
+                <input className={inputCls} value={item.name} onChange={(e) => set(['sectors', 'items', i, 'name'], e.target.value)} />
+              </Field>
+              <Field label="Icon">
+                <select className={inputCls} value={item.icon} onChange={(e) => set(['sectors', 'items', i, 'icon'], e.target.value)}>
+                  {AVAILABLE_ICONS.map((name) => (
+                    <option key={name} value={name}>{name}</option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+          </ItemShell>
+        ))}
+      </ListShell>
+    </Card>
+  );
+}
+
+function PartnersEditor() {
+  const { content, set, push, removeAt } = useContent();
+  const p = content.partners;
+  const moveItem = (i: number, dir: -1 | 1) =>
+    set(['partners', 'items'], moveInList(p.items, i, dir));
+  return (
+    <Card title="Partners" hint="Trusted-partner cards on the homepage.">
+      <Field label="Heading">
+        <input className={inputCls} value={p.heading} onChange={(e) => set(['partners', 'heading'], e.target.value)} />
+      </Field>
+      <Field label="Subheading">
+        <textarea className={inputCls} rows={2} value={p.sub} onChange={(e) => set(['partners', 'sub'], e.target.value)} />
+      </Field>
+      <ListShell
+        addLabel="Add partner"
+        onAdd={() => push(['partners', 'items'], { name: 'New partner', work: '' })}
+      >
+        {p.items.map((item, i) => (
+          <ItemShell key={i} index={i} total={p.items.length} onRemove={() => removeAt(['partners', 'items'], i)} onMove={(d) => moveItem(i, d)}>
+            <Field label="Partner name">
+              <input className={inputCls} value={item.name} onChange={(e) => set(['partners', 'items', i, 'name'], e.target.value)} />
+            </Field>
+            <Field label="Logo (optional — upload the real logo, never a placeholder)">
+              <ImageDropzone
+                value={item.logo}
+                onChange={(v) => set(['partners', 'items', i, 'logo'], v)}
+              />
+            </Field>
+            <Field label="Work delivered">
+              <textarea className={inputCls} rows={2} value={item.work} onChange={(e) => set(['partners', 'items', i, 'work'], e.target.value)} />
+            </Field>
+          </ItemShell>
+        ))}
+      </ListShell>
+    </Card>
+  );
+}
+
 function AnimatedEditor() {
   const { content, set, push, removeAt } = useContent();
   const a = content.animated;
@@ -454,7 +532,7 @@ function CtaEditor() {
   const { content, set } = useContent();
   const c = content.cta;
   return (
-    <Card title="CTA Banner" hint="Homepage closing banner before the contact section.">
+    <Card title="CTA Banner" hint="Homepage closing banner.">
       <Field label="First line">
         <input className={inputCls} value={c.line1} onChange={(e) => set(['cta', 'line1'], e.target.value)} />
       </Field>
@@ -501,6 +579,9 @@ function AboutEditor() {
         </Field>
         <Field label="Story">
           <textarea className={inputCls} rows={4} value={a.description} onChange={(e) => set(['about', 'description'], e.target.value)} />
+        </Field>
+        <Field label="Name story (shows under the story — empty hides it)">
+          <textarea className={inputCls} rows={3} value={a.nameStory} onChange={(e) => set(['about', 'nameStory'], e.target.value)} />
         </Field>
         <ListShell
           addLabel="Add statistic"
@@ -640,6 +721,8 @@ type SectionCardKey =
   | 'layout'
   | 'showcase'
   | 'grid'
+  | 'sectors'
+  | 'partners'
   | 'animated'
   | 'cta'
   | 'contact'
@@ -651,9 +734,11 @@ const SECTION_CARDS: { key: SectionCardKey; title: string; hint: string }[] = [
   { key: 'layout', title: 'Homepage Layout', hint: 'Reorder sections, or hide any without deleting content.' },
   { key: 'showcase', title: 'Services Showcase', hint: 'Services grid, images, and bulleted block.' },
   { key: 'grid', title: 'Why-Us Grid', hint: 'Trust cards with icons.' },
+  { key: 'sectors', title: 'Sectors', hint: 'Who we serve chips.' },
+  { key: 'partners', title: 'Partners', hint: 'Trusted partners and their work.' },
   { key: 'animated', title: 'Process Panel', hint: 'Process steps and button.' },
-  { key: 'cta', title: 'CTA Banner', hint: 'Closing banner text and button.' },
   { key: 'contact', title: 'Contact Info', hint: 'Channels driving home, footer, and contact page.' },
+  { key: 'cta', title: 'CTA Banner', hint: 'Closing banner text and button.' },
   { key: 'about', title: 'About Page', hint: 'Headline, story, stats, foundation, leadership.' },
   { key: 'footer', title: 'Footer', hint: 'Brand name and description.' },
 ];
@@ -693,6 +778,8 @@ function SectionDetail({ cardKey }: { cardKey: SectionCardKey }) {
       {cardKey === 'layout' && <LayoutEditor />}
       {cardKey === 'showcase' && <ShowcaseEditor />}
       {cardKey === 'grid' && <GridEditor />}
+      {cardKey === 'sectors' && <SectorsEditor />}
+      {cardKey === 'partners' && <PartnersEditor />}
       {cardKey === 'animated' && <AnimatedEditor />}
       {cardKey === 'cta' && <CtaEditor />}
       {cardKey === 'contact' && <ContactEditor />}

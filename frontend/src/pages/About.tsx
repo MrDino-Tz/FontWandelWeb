@@ -14,6 +14,11 @@ export default function About() {
             <p className="mt-8 text-lg font-medium text-pretty text-slate-700 sm:text-xl/8">
               {about.description}
             </p>
+            {about.nameStory && (
+              <p className="mt-4 text-lg text-pretty text-slate-600 sm:text-xl/8">
+                {about.nameStory}
+              </p>
+            )}
           </div>
           <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
             <dl className="mt-16 grid grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">

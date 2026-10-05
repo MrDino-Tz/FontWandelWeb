@@ -33,6 +33,8 @@ export type HomeSectionId =
   | 'showcase'
   | 'animated'
   | 'grid'
+  | 'sectors'
+  | 'partners'
   | 'cta'
   | 'contact';
 
@@ -100,6 +102,7 @@ export interface FoundationItem {
 export interface AboutContent {
   title: string;
   description: string;
+  nameStory: string;
   stats: Stat[];
   foundationTitle: string;
   foundation: FoundationItem[];
@@ -129,6 +132,30 @@ export interface FooterContent {
   description: string;
 }
 
+export interface SectorItem {
+  name: string;
+  icon: IconName;
+}
+
+export interface SectorsContent {
+  heading: string;
+  sub: string;
+  items: SectorItem[];
+}
+
+export interface PartnerItem {
+  name: string;
+  work: string;
+  /** Optional uploaded logo — no placeholders; absent until added. */
+  logo?: string;
+}
+
+export interface PartnersContent {
+  heading: string;
+  sub: string;
+  items: PartnerItem[];
+}
+
 export interface SiteContent {
   hero: HeroContent;
   homeLayout: HomeLayoutItem[];
@@ -138,6 +165,8 @@ export interface SiteContent {
   cta: CtaContent;
   about: AboutContent;
   contact: ContactContent;
+  sectors: SectorsContent;
+  partners: PartnersContent;
   footer: FooterContent;
 }
 
@@ -182,6 +211,13 @@ export const AVAILABLE_ICONS: IconName[] = [
   'checkCircle',
   'thumbUp',
   'thumbDown',
+  'heart',
+  'store',
+  'graduationCap',
+  'church',
+  'landmark',
+  'palmTree',
+  'medicalCross',
 ];
 
 const defaults: SiteContent = {
@@ -200,8 +236,10 @@ const defaults: SiteContent = {
     { id: 'showcase', visible: true },
     { id: 'animated', visible: true },
     { id: 'grid', visible: true },
-    { id: 'cta', visible: true },
+    { id: 'sectors', visible: true },
+    { id: 'partners', visible: true },
     { id: 'contact', visible: true },
+    { id: 'cta', visible: false },
   ],
   showcase: {
     heading: 'Our core services',
@@ -290,6 +328,8 @@ const defaults: SiteContent = {
     title: 'FontWandel Technologies',
     description:
       'is a digital transformation and innovation company committed to enabling a more digitally empowered future. We believe technology is more than a tool — it is a catalyst for transforming how organizations operate, how people connect, how decisions are made, and how opportunities are created.',
+    nameStory:
+      '“FontWandel” is a German-inspired hybrid name: FONT (“fountain”) represents a continuous source of ideas and solutions; WANDEL (“transformation/change”) represents the company\u2019s core purpose — changing how organizations operate through technology. Together: “The Fountain of Digital Transformation.”',
     stats: [
       { label: 'Core services', value: '6' },
       { label: 'Wandel Suite products live', value: '4' },
@@ -347,6 +387,41 @@ const defaults: SiteContent = {
     description:
       'FontWandel Technologies Ltd. is a digital transformation and innovation company enabling organizations to embrace secure, connected technology.',
   },
+  sectors: {
+    heading: 'Who we serve',
+    sub: 'From government offices to market stalls — wherever fragmented manual work holds an organization back.',
+    items: [
+      { name: 'NGOs & Development Organizations', icon: 'heart' },
+      { name: 'SMEs & Businesses', icon: 'store' },
+      { name: 'Education & Schools', icon: 'graduationCap' },
+      { name: 'Churches & Faith Organizations', icon: 'church' },
+      { name: 'Government & Institutions', icon: 'landmark' },
+      { name: 'Tourism & Hospitality', icon: 'palmTree' },
+      { name: 'Healthcare', icon: 'medicalCross' },
+    ],
+  },
+  partners: {
+    heading: 'Trusted by organizations like yours',
+    sub: 'Real work, delivered — our partners can speak to its quality.',
+    items: [
+      {
+        name: 'EMAC Tanzania (E-MAC)',
+        work: 'Website redevelopment, IT consultancy and maintenance, cybersecurity solutions.',
+      },
+      {
+        name: 'Zion Impact FM 100.1',
+        work: 'Web system supporting on-air programs and radio programming.',
+      },
+      {
+        name: 'CanaanQuest Safaris',
+        work: 'Travel agency website with direct booking and vendor interlinking.',
+      },
+      {
+        name: 'Capacity Building for Youth Organization (CBYO)',
+        work: 'Website for a youth NGO — a disclosed community partnership.',
+      },
+    ],
+  },
 };
 
 function load(): SiteContent {
@@ -355,10 +430,68 @@ function load(): SiteContent {
     if (!raw) return defaults;
     const parsed = JSON.parse(raw) as Partial<SiteContent>;
     if (!parsed.hero || !parsed.homeLayout) return defaults;
-    return { ...defaults, ...parsed };
+    return migrate(parsed);
   } catch {
     return defaults;
   }
+}
+
+/**
+ * Canonical homepage order. Saves that still follow a previous default
+ * order are moved forward (keeping each section's visibility); layouts a
+ * user arranged deliberately are left untouched, with new sections appended.
+ */
+const CANONICAL_ORDER: HomeSectionId[] = [
+  'hero',
+  'showcase',
+  'animated',
+  'grid',
+  'sectors',
+  'partners',
+  'contact',
+  'cta',
+];
+
+const LEGACY_ORDERS: HomeSectionId[][] = [
+  ['hero', 'showcase', 'animated', 'grid', 'cta', 'contact'],
+  ['hero', 'showcase', 'animated', 'grid', 'sectors', 'partners', 'cta', 'contact'],
+];
+
+function normalizeLayout(stored: HomeLayoutItem[] | undefined): HomeLayoutItem[] {
+  const list = stored ?? [];
+  const vis = new Map(list.map((item) => [item.id, item.visible]));
+  const canonicalVis = new Map(defaults.homeLayout.map((item) => [item.id, item.visible]));
+  const known = list
+    .map((item) => item.id)
+    .filter((id) => (CANONICAL_ORDER as string[]).includes(id));
+  const unknown = list.filter((item) => !(CANONICAL_ORDER as string[]).includes(item.id));
+  const untouchedDefault = LEGACY_ORDERS.some(
+    (order) => order.length === known.length && order.every((id, i) => known[i] === id),
+  );
+  const base = untouchedDefault
+    ? CANONICAL_ORDER
+    : [...known, ...CANONICAL_ORDER.filter((id) => !known.includes(id))];
+  const pick = (id: HomeSectionId) =>
+    untouchedDefault ? (canonicalVis.get(id) ?? true) : (vis.get(id) ?? true);
+  return [...base.map((id) => ({ id, visible: pick(id) })), ...unknown];
+}
+export function migrate(saved: Partial<SiteContent>): SiteContent {
+  const merged = { ...defaults, ...saved } as SiteContent;
+  merged.homeLayout = normalizeLayout(saved.homeLayout);
+  merged.about = { ...defaults.about, ...(saved.about ?? {}) };
+  const rawSectors = (saved.sectors as { items?: unknown } | undefined)?.items;
+  if (Array.isArray(rawSectors) && rawSectors.length > 0 && typeof rawSectors[0] === 'string') {
+    const fallbackIcons = defaults.sectors.items.map((s) => s.icon);
+    merged.sectors = {
+      ...defaults.sectors,
+      ...(saved.sectors as object),
+      items: (rawSectors as string[]).map((name, i) => ({
+        name,
+        icon: fallbackIcons[i % fallbackIcons.length],
+      })),
+    };
+  }
+  return merged;
 }
 
 type Path = (string | number)[];
@@ -422,7 +555,7 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
     apiGet<Partial<SiteContent>>('/content')
       .then((data) => {
         if (cancelled) return;
-        const merged = { ...defaults, ...data } as SiteContent;
+        const merged = migrate(data);
         if (!merged.hero || !merged.homeLayout) return;
         contentRef.current = merged;
         setContent(merged);
@@ -515,7 +648,7 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
       setSync('idle');
     };
     apiSend<SiteContent>('POST', '/content/reset')
-      .then((data) => show({ ...defaults, ...data } as SiteContent))
+      .then((data) => show(migrate(data)))
       .catch(() => show(defaults));
   }, []);
 

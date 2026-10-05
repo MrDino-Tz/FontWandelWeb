@@ -56,6 +56,8 @@
 @theme inline {
   --animate-scroll: scroll var(--duration, 40s) var(--direction, forwards)
     linear infinite;
+  --animate-marquee: marquee var(--duration, 30s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--duration, 30s) linear infinite;
 
   --font-dm-sans: 'DM Sans', sans-serif;
   --font-work-sans: 'Work Sans', sans-serif;
@@ -63,6 +65,21 @@
   @keyframes scroll {
     to {
       transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
     }
   }
 }
@@ -180,7 +197,8 @@
   to { transform: rotate(360deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fw-bar, .fw-draw, .fw-float, .fw-float-slow, .fw-blink, .fw-flow, .fw-spin-slow {
+  .fw-bar, .fw-draw, .fw-float, .fw-float-slow, .fw-blink, .fw-flow, .fw-spin-slow,
+  .animate-marquee, .animate-marquee-reverse {
     animation: none;
   }
 }
