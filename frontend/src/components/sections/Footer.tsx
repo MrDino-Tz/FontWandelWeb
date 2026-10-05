@@ -115,11 +115,6 @@ export default function Footer() {
           <p className="text-sm font-medium text-slate-600">
             &copy; {copyrightYear} {companyName} All rights reserved.
           </p>
-          <p className="text-sm text-slate-500">
-            <Link to="/fontadmin/login" className="underline-offset-4 transition hover:text-teal-700 hover:underline">
-              Admin
-            </Link>
-          </p>
         </div>
       </div>
     </footer>
