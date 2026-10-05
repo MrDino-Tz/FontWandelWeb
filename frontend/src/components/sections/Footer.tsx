@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useContent } from '../../admin/store';
 import { asset } from '../../utils/base';
+import { ApiError, apiSend } from '../../api';
 
 const copyrightYear = new Date().getFullYear();
 
@@ -10,6 +12,33 @@ export default function Footer() {
   const lines = content.contact.channels.flatMap((c) => c.lines);
   const phones = lines.filter((l) => l.href.startsWith('tel:'));
   const emails = lines.filter((l) => l.href.startsWith('mailto:'));
+  const [subEmail, setSubEmail] = useState('');
+  const [subState, setSubState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [subNote, setSubNote] = useState('');
+
+  const subscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (subState === 'sending') return;
+    setSubState('sending');
+    setSubNote('');
+    try {
+      await apiSend<{ ok: boolean }>('POST', '/contact', {
+        name: 'Newsletter signup',
+        email: subEmail,
+        subject: 'More information request',
+        message: 'Please send me more information about FontWandel.',
+      });
+      setSubState('sent');
+      setSubEmail('');
+    } catch (err) {
+      setSubState('error');
+      setSubNote(
+        err instanceof ApiError
+          ? err.message
+          : 'Could not send right now. Please email us directly.',
+      );
+    }
+  };
 
   return (
     <footer className="mt-auto w-full bg-linear-to-t from-teal-200 via-transparent to-white pb-10">
@@ -50,23 +79,35 @@ export default function Footer() {
           </div>
           <div id="subscribe" className="col-span-2 md:col-span-3 xl:col-span-2 scroll-mt-32">
             <h3 className="font-semibold text-slate-700">More information?</h3>
-            <form
-              className="mt-3 flex gap-2"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input
-                type="email"
-                required
-                placeholder="Your email"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
-              />
-              <button
-                type="submit"
-                className="rounded-lg bg-gold-500 px-4 py-2 text-sm font-medium text-black hover:bg-gold-600"
+            {subState === 'sent' ? (
+              <p className="mt-3 rounded-lg bg-teal-50 px-3 py-2.5 text-sm font-medium text-teal-700">
+                Thanks — we&apos;ll be in touch shortly.
+              </p>
+            ) : (
+              <form
+                className="mt-3 flex gap-2"
+                onSubmit={subscribe}
               >
-                Subscribe
-              </button>
-            </form>
+                <input
+                  type="email"
+                  required
+                  placeholder="Your email"
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
+                />
+                <button
+                  type="submit"
+                  disabled={subState === 'sending'}
+                  className="rounded-lg bg-gold-500 px-4 py-2 text-sm font-medium text-black hover:bg-gold-600 disabled:opacity-60"
+                >
+                  {subState === 'sending' ? 'Sending…' : 'Subscribe'}
+                </button>
+              </form>
+            )}
+            {subState === 'error' && (
+              <p className="mt-2 text-xs font-medium text-red-600">{subNote}</p>
+            )}
           </div>
         </div>
         <hr className="mt-10 mb-5 border-slate-200" />
