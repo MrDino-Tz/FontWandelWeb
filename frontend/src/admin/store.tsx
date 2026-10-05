@@ -250,7 +250,8 @@ const defaults: SiteContent = {
         title: 'Digital Transformation & Business Automation',
         description:
           'Turning manual, paper- and spreadsheet-based operations into connected digital workflows — process digitization, digital forms and approvals, CRM and ERP systems, and document management.',
-        image: '/assets/images/automation-workflow.svg',
+        image:
+          'https://images.pexels.com/photos/13377869/pexels-photo-13377869.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
         bullets: [],
       },
       {
@@ -479,6 +480,25 @@ export function migrate(saved: Partial<SiteContent>): SiteContent {
   const merged = { ...defaults, ...saved } as SiteContent;
   merged.homeLayout = normalizeLayout(saved.homeLayout);
   merged.about = { ...defaults.about, ...(saved.about ?? {}) };
+  // Carry forward replaced default artwork: anything still pointing at the
+  // previous default image gets the current default (a deliberate custom
+  // pick of the same file can be re-selected in the dashboard).
+  const currentDefaultImages = new Map(
+    defaults.showcase.items.map((item) => [item.title, item.image]),
+  );
+  const RETIRED_IMAGES: Record<string, string | undefined> = {
+    '/assets/images/automation-workflow.svg': currentDefaultImages.get(
+      'Digital Transformation & Business Automation',
+    ),
+  };
+  merged.showcase = {
+    ...defaults.showcase,
+    ...(saved.showcase ?? {}),
+    items: (merged.showcase.items ?? []).map((item) => {
+      const replacement = item.image ? RETIRED_IMAGES[item.image] : undefined;
+      return replacement ? { ...item, image: replacement } : item;
+    }),
+  };
   const rawSectors = (saved.sectors as { items?: unknown } | undefined)?.items;
   if (Array.isArray(rawSectors) && rawSectors.length > 0 && typeof rawSectors[0] === 'string') {
     const fallbackIcons = defaults.sectors.items.map((s) => s.icon);

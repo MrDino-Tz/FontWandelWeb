@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import Icon from '../components/ui/Icon';
-import { asset } from '../utils/base';
 
 const productsLive = ['Net Kitonga', 'Duka Kamili', 'SmrtEvent', 'Foleni Kiganjani'];
 const whoTheyAreFor = ['Entrepreneurs', 'SMEs & Retail Shops', 'Event Organizers', 'Churches & Associations', 'Salons & Barbershops', 'Hospitals & Service Points'];
@@ -39,65 +38,12 @@ export default function Platform() {
           </div>
           <div className="relative m-auto w-full pt-16 sm:w-[90%]">
             <div className="aspect-video">
-              <svg viewBox="0 0 800 450" className="aspect-auto w-full rounded-xl bg-white shadow-lg ring-1 ring-slate-200" role="img" aria-label="Data flowing from sources through processing to live dashboards">
-                <circle cx="726" cy="60" r="24" fill="#B3DBF0" opacity="0.45" />
-                <circle cx="70" cy="392" r="16" fill="#B3DBF0" opacity="0.35" />
-
-                {/* Sources */}
-                <rect x="40" y="40" width="120" height="100" rx="16" fill="#FFFFFF" stroke="#D8DEE7" strokeWidth="3" />
-                <rect x="78" y="62" width="44" height="56" fill="#FFFFFF" stroke="#0C648F" strokeWidth="5" />
-                <line x1="78" y1="81" x2="122" y2="81" stroke="#0C648F" strokeWidth="4" />
-                <line x1="78" y1="99" x2="122" y2="99" stroke="#B9C2CF" strokeWidth="4" />
-                <line x1="100" y1="62" x2="100" y2="118" stroke="#0C648F" strokeWidth="4" />
-
-                <rect x="40" y="175" width="120" height="100" rx="16" fill="#FFFFFF" stroke="#D8DEE7" strokeWidth="3" />
-                <path d="M64 242 a16 16 0 0 1 3 -31 a21 21 0 0 1 40 -7 a18 18 0 0 1 7 38 z" fill="#D9EDF8" stroke="#0C648F" strokeWidth="5" strokeLinejoin="round" />
-
-                <rect x="40" y="310" width="120" height="100" rx="16" fill="#FFFFFF" stroke="#D8DEE7" strokeWidth="3" />
-                <ellipse cx="100" cy="342" rx="22" ry="8" fill="#FFFFFF" stroke="#0C648F" strokeWidth="5" />
-                <rect x="78" y="342" width="44" height="30" fill="#D9EDF8" />
-                <line x1="78" y1="342" x2="78" y2="372" stroke="#0C648F" strokeWidth="5" />
-                <line x1="122" y1="342" x2="122" y2="372" stroke="#0C648F" strokeWidth="5" />
-                <path d="M78 372 A22 8 0 0 0 122 372" fill="none" stroke="#0C648F" strokeWidth="5" />
-
-                {/* Ingestion flows */}
-                <g stroke="#1590C6" strokeWidth="5" strokeLinecap="round" fill="none">
-                  <line x1="166" y1="90" x2="324" y2="170" className="fw-flow" />
-                  <line x1="166" y1="225" x2="324" y2="225" className="fw-flow" />
-                  <line x1="166" y1="360" x2="324" y2="280" className="fw-flow" />
-                </g>
-
-                {/* Processor */}
-                <rect x="330" y="155" width="140" height="140" rx="28" fill="#0C648F" />
-                <g className="fw-spin-slow">
-                  <g transform="translate(400,225)" stroke="#FFFFFF" strokeWidth="8" strokeLinecap="round">
-                    <line x1="0" y1="-34" x2="0" y2="-18" />
-                    <line x1="0" y1="18" x2="0" y2="34" />
-                    <line x1="-34" y1="0" x2="-18" y2="0" />
-                    <line x1="18" y1="0" x2="34" y2="0" />
-                    <line x1="-24" y1="-24" x2="-13" y2="-13" />
-                    <line x1="13" y1="13" x2="24" y2="24" />
-                    <line x1="24" y1="-24" x2="13" y2="-13" />
-                    <line x1="-13" y1="13" x2="-24" y2="24" />
-                  </g>
-                  <circle cx="400" cy="225" r="22" fill="#0C648F" stroke="#FFFFFF" strokeWidth="8" />
-                </g>
-
-                {/* Output flow */}
-                <line x1="476" y1="225" x2="554" y2="225" stroke="#1590C6" strokeWidth="5" strokeLinecap="round" className="fw-flow" />
-
-                {/* Dashboard output */}
-                <rect x="560" y="110" width="200" height="230" rx="20" fill="#FFFFFF" stroke="#D8DEE7" strokeWidth="3" />
-                <circle cx="586" cy="136" r="5" fill="#D8DEE7" />
-                <circle cx="604" cy="136" r="5" fill="#D8DEE7" />
-                <circle cx="622" cy="136" r="5" fill="#D8DEE7" />
-                <polyline points="588,190 618,172 648,180 678,156" fill="none" stroke="#0C648F" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="678" cy="156" r="7" fill="#0C648F" />
-                <rect x="590" y="250" width="26" height="60" rx="6" fill="#B3DBF0" className="fw-bar" style={{ animationDelay: '0.3s' }} />
-                <rect x="626" y="225" width="26" height="85" rx="6" fill="#1590C6" className="fw-bar" style={{ animationDelay: '0.8s' }} />
-                <rect x="662" y="245" width="26" height="65" rx="6" fill="#0C648F" className="fw-bar" style={{ animationDelay: '0.1s' }} />
-                <rect x="698" y="210" width="26" height="100" rx="6" fill="#1590C6" className="fw-bar" style={{ animationDelay: '0.6s' }} />
-              </svg>
+              <img
+                src="https://images.pexels.com/photos/9301762/pexels-photo-9301762.jpeg?auto=compress&cs=tinysrgb&w=1260"
+                alt="Team collaborating in front of a large screen"
+                loading="eager"
+                className="h-full w-full rounded-xl object-cover shadow-lg"
+              />
             </div>
           </div>
         </div>
@@ -127,7 +73,7 @@ export default function Platform() {
             </div>
           </div>
           <div className="relative flex flex-col items-center justify-center gap-8 rounded-xl p-6">
-            <img src={asset('/assets/images/platform-automation.svg')} alt="Connected systems illustration" className="rounded-xl shadow-lg" />
+            <img src="https://images.pexels.com/photos/8204363/pexels-photo-8204363.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Team collaborating on data at a modern workspace" loading="lazy" className="rounded-xl shadow-lg" />
           </div>
         </div>
       </section>
@@ -135,7 +81,7 @@ export default function Platform() {
       <section className="mx-auto max-w-[85rem] border-b border-dashed border-slate-400 px-4 py-10 sm:px-6 md:py-14 lg:px-8 lg:py-20">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="order-last md:order-first">
-            <img src={asset('/assets/images/platform-analytics.svg')} alt="Analytics illustration" className="rounded-xl shadow-lg" />
+            <img src="https://images.pexels.com/photos/9301737/pexels-photo-9301737.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Professionals analyzing data in a modern office" loading="lazy" className="rounded-xl shadow-lg" />
           </div>
           <div className="text-end">
             <h2 className="text-2xl font-semibold tracking-tight text-balance text-slate-800 md:text-3xl md:leading-tight">

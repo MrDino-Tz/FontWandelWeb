@@ -50,20 +50,10 @@ export function HeroContent() {
   );
 }
 
-const chartBars = [
-  { x: 28, h: 76, delay: '0s', fill: '#B3DBF0' },
-  { x: 88, h: 118, delay: '0.4s', fill: '#79C2E3' },
-  { x: 148, h: 92, delay: '0.8s', fill: '#B3DBF0' },
-  { x: 208, h: 142, delay: '0.2s', fill: '#1590C6' },
-  { x: 268, h: 108, delay: '0.9s', fill: '#79C2E3' },
-  { x: 328, h: 158, delay: '0.5s', fill: '#0C648F' },
-  { x: 388, h: 126, delay: '1.1s', fill: '#1590C6' },
-  { x: 448, h: 170, delay: '0.7s', fill: '#0C648F' },
-];
-
 export function HeroVideo() {
   return (
     <div className="relative m-auto w-full pt-16 sm:w-[90%]">
+      <div className="via-off-white to-off-white pointer-events-none absolute inset-x-0 -top-2 z-10 hidden h-20 w-full bg-linear-to-t from-transparent sm:block" />
       <div className="via-off-white to-off-white pointer-events-none absolute inset-x-0 -bottom-2 z-10 hidden h-20 w-full bg-linear-to-b from-transparent sm:block" />
 
       {/* Floating notification: payment */}
@@ -84,49 +74,18 @@ export function HeroVideo() {
         </div>
       </div>
 
-      {/* Live operations panel */}
-      <div className="relative overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-slate-200">
-        <div className="flex items-center gap-2 border-b border-slate-100 px-5 py-3">
-          <span className="size-2.5 rounded-full bg-slate-200" />
-          <span className="size-2.5 rounded-full bg-slate-200" />
-          <span className="size-2.5 rounded-full bg-slate-200" />
-          <span className="ml-2 text-sm font-medium text-slate-600">Operations at a glance</span>
-          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700">
-            <span className="fw-blink size-1.5 rounded-full bg-teal-600" />
-            LIVE
-          </span>
-        </div>
-        <div className="px-5 pt-4 pb-2">
-          <svg viewBox="0 0 560 220" className="h-auto w-full" role="img" aria-label="Animated operations chart">
-            <g>
-              {chartBars.map((bar) => (
-                <rect
-                  key={bar.x}
-                  x={bar.x}
-                  y={200 - bar.h}
-                  width="36"
-                  height={bar.h}
-                  rx="7"
-                  fill={bar.fill}
-                  className="fw-bar"
-                  style={{ animationDelay: bar.delay }}
-                />
-              ))}
-            </g>
-            <path
-              d="M8 178 C 70 162, 110 170, 165 138 S 275 122, 330 96 S 450 74, 552 34"
-              fill="none"
-              stroke="#0C648F"
-              strokeWidth="6"
-              strokeLinecap="round"
-              className="fw-draw"
-            />
-            <circle cx="552" cy="34" r="8" fill="#F5B301" />
-          </svg>
-          <p className="pt-1 pb-3 text-center text-xs text-slate-400">
-            From manual reports to live visibility
-          </p>
-        </div>
+      {/* Hero video — free stock (Pexels license), diverse business team at work */}
+      <div className="relative overflow-hidden rounded-xl shadow-lg ring-1 ring-slate-200">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          src="https://videos.pexels.com/video-files/6561559/6561559-hd_1280_720_25fps.mp4"
+          aria-label="FontWandel at work"
+          className="aspect-video w-full object-cover"
+        />
       </div>
     </div>
   );
