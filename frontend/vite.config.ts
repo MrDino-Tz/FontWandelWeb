@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Project site: https://from-system.github.io/FontWandelWeb/
+  // Project site: https://mrdino-tz.github.io/FontWandelWeb/
   base: '/FontWandelWeb/',
   plugins: [react(), tailwindcss()],
   server: {

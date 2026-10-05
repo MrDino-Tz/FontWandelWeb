@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { articles, references } from '../../data/content';
-import whitepaperFiles from '../../data/whitepapers.json';
+import { useSupportData } from '../../data/useRemote';
 
 function Hero({ title, description }: { title: string; description: string }) {
   return (
@@ -22,6 +21,7 @@ function Card({ to, title, description, meta }: { to: string; title: string; des
 }
 
 export function ArticlesIndex() {
+  const { articles } = useSupportData();
   return (
     <>
       <Hero title="Training Guides" description="Practical guides and staff training material." />
@@ -36,6 +36,7 @@ export function ArticlesIndex() {
 
 export function ArticleDetail() {
   const { id } = useParams();
+  const { articles } = useSupportData();
   const article = articles.find((a) => a.slug === id);
   if (!article) return <Hero title="Not found" description="Article not found." />;
   return (
@@ -57,6 +58,7 @@ export function ArticleDetail() {
 }
 
 export function ReferenceIndex() {
+  const { references } = useSupportData();
   return (
     <>
       <Hero title="Documentation" description="Find technical documentation and reference materials." />
@@ -71,6 +73,7 @@ export function ReferenceIndex() {
 
 export function ReferenceDetail() {
   const { id } = useParams();
+  const { references } = useSupportData();
   const ref = references.find((r) => r.slug === id);
   if (!ref) return <Hero title="Not found" description="Reference not found." />;
   return (
@@ -92,6 +95,7 @@ export function ReferenceDetail() {
 }
 
 export function KnowledgeBase() {
+  const { articles, references } = useSupportData();
   const all = [...articles, ...references];
   return (
     <>
@@ -106,7 +110,7 @@ export function KnowledgeBase() {
 }
 
 export function Whitepapers() {
-  const items = whitepaperFiles as { title: string; description: string }[];
+  const { whitepapers: items } = useSupportData();
   return (
     <>
       <Hero title="Whitepapers" description="In-depth reads on digital transformation for busy teams." />

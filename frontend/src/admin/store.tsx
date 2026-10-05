@@ -382,6 +382,7 @@ interface Store {
   content: SiteContent;
   sync: SyncStatus;
   set: (path: Path, value: unknown) => void;
+  replace: (next: SiteContent) => void;
   push: <T>(path: Path, item: T) => void;
   removeAt: (path: Path, index: number) => void;
   moveHomeSection: (index: number, dir: -1 | 1) => void;
@@ -438,6 +439,13 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
   const set = useCallback(
     (path: Path, value: unknown) => {
       apply(setIn(contentRef.current, path, value));
+    },
+    [apply],
+  );
+
+  const replace = useCallback(
+    (next: SiteContent) => {
+      apply(next);
     },
     [apply],
   );
@@ -516,13 +524,14 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
       content,
       sync,
       set,
+      replace,
       push,
       removeAt,
       moveHomeSection,
       toggleHomeSection,
       reset,
     }),
-    [content, sync, set, push, removeAt, moveHomeSection, toggleHomeSection, reset],
+    [content, sync, set, replace, push, removeAt, moveHomeSection, toggleHomeSection, reset],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

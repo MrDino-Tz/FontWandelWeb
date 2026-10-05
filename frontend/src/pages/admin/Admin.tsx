@@ -1,5 +1,6 @@
-import { useState, type ReactNode } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Link, Navigate, NavLink, useParams } from 'react-router-dom';
+import { getVisits } from '../../admin/visits';
 import {
   useContent,
   AVAILABLE_IMAGES,
@@ -7,29 +8,7 @@ import {
   type HomeSectionId,
 } from '../../admin/store';
 import { useAuth } from '../../admin/auth';
-
-type SectionKey =
-  | 'hero'
-  | 'layout'
-  | 'showcase'
-  | 'grid'
-  | 'animated'
-  | 'cta'
-  | 'about'
-  | 'contact'
-  | 'footer';
-
-const SECTIONS: { key: SectionKey; label: string }[] = [
-  { key: 'hero', label: 'Hero' },
-  { key: 'layout', label: 'Homepage Layout' },
-  { key: 'showcase', label: 'Services Showcase' },
-  { key: 'grid', label: 'Why-Us Grid' },
-  { key: 'animated', label: 'Process Panel' },
-  { key: 'cta', label: 'CTA Banner' },
-  { key: 'about', label: 'About Page' },
-  { key: 'contact', label: 'Contact Info' },
-  { key: 'footer', label: 'Footer' },
-];
+import { asset } from '../../utils/base';
 
 const SECTION_NAMES: Record<HomeSectionId, string> = {
   hero: 'Hero',
@@ -210,6 +189,120 @@ function LayoutEditor() {
   );
 }
 
+function readAsDataURL(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error('Could not read that file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('That file is not a readable image.'));
+    img.src = src;
+  });
+}
+
+/** Downscale raster uploads so stored content stays lean; vectors pass through. */
+async function fileToImageValue(file: File): Promise<string> {
+  const isSvg = file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
+  if (!isSvg && !file.type.startsWith('image/')) {
+    throw new Error('Only image files (PNG, JPG, WebP, GIF, SVG).');
+  }
+  const dataUrl = await readAsDataURL(file);
+  if (isSvg) return dataUrl;
+  const img = await loadImage(dataUrl);
+  const max = 1200;
+  const scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  if (scale === 1 && file.size <= 500 * 1024) return dataUrl;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+  canvas.getContext('2d')?.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const probe = document.createElement('canvas').toDataURL('image/webp');
+  const type = probe.startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
+  return canvas.toDataURL(type, 0.82);
+}
+
+function ImageDropzone({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange: (v: string | undefined) => void;
+}) {
+  const [dragOver, setDragOver] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = async (file: File | undefined) => {
+    if (!file || busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      onChange(await fileToImageValue(file));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not use that file.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div>
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label="Drop an image here or click to browse"
+        onClick={() => inputRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          void handleFile(e.dataTransfer.files?.[0]);
+        }}
+        className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed px-3 py-2.5 transition ${
+          dragOver ? 'border-teal-600 bg-teal-50' : 'border-slate-300 bg-slate-50 hover:border-slate-400'
+        }`}
+      >
+        {value ? (
+          <img src={asset(value)} alt="Current image preview" className="h-16 w-24 shrink-0 rounded-lg object-cover ring-1 ring-slate-200" />
+        ) : (
+          <span className="flex h-16 w-24 shrink-0 items-center justify-center rounded-lg bg-slate-200 text-xl text-slate-400">
+            +
+          </span>
+        )}
+        <span className="text-xs text-slate-500">
+          {busy ? 'Processing…' : value ? 'Drop a new image to replace, or click to browse.' : 'Drop an image here, or click to browse.'}
+        </span>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*,.svg"
+          className="hidden"
+          onChange={(e) => {
+            void handleFile(e.target.files?.[0]);
+            e.target.value = '';
+          }}
+        />
+      </div>
+      {error && <p className="mt-1 text-xs font-medium text-red-600">{error}</p>}
+    </div>
+  );
+}
+
 function ShowcaseEditor() {
   const { content, set, push, removeAt } = useContent();
   const s = content.showcase;
@@ -239,8 +332,17 @@ function ShowcaseEditor() {
               <textarea className={inputCls} rows={3} value={item.description} onChange={(e) => set(['showcase', 'items', i, 'description'], e.target.value)} />
             </Field>
             <Field label="Image">
-              <select className={inputCls} value={item.image ?? ''} onChange={(e) => set(['showcase', 'items', i, 'image'], e.target.value || undefined)}>
+              <ImageDropzone
+                value={item.image}
+                onChange={(v) => set(['showcase', 'items', i, 'image'], v)}
+              />
+            </Field>
+            <Field label="…or pick a bundled image">
+              <select className={inputCls} value={item.image && AVAILABLE_IMAGES.includes(item.image) ? item.image : ''} onChange={(e) => set(['showcase', 'items', i, 'image'], e.target.value || undefined)}>
                 <option value="">No image (bulleted block)</option>
+                {item.image && !AVAILABLE_IMAGES.includes(item.image) && (
+                  <option value={item.image}>Custom upload</option>
+                )}
                 {AVAILABLE_IMAGES.map((src) => (
                   <option key={src} value={src}>{src.split('/').pop()}</option>
                 ))}
@@ -533,6 +635,73 @@ function ContactEditor() {
   );
 }
 
+type SectionCardKey =
+  | 'hero'
+  | 'layout'
+  | 'showcase'
+  | 'grid'
+  | 'animated'
+  | 'cta'
+  | 'contact'
+  | 'about'
+  | 'footer';
+
+const SECTION_CARDS: { key: SectionCardKey; title: string; hint: string }[] = [
+  { key: 'hero', title: 'Hero', hint: 'Banner pill, headline, subtext, buttons.' },
+  { key: 'layout', title: 'Homepage Layout', hint: 'Reorder sections, or hide any without deleting content.' },
+  { key: 'showcase', title: 'Services Showcase', hint: 'Services grid, images, and bulleted block.' },
+  { key: 'grid', title: 'Why-Us Grid', hint: 'Trust cards with icons.' },
+  { key: 'animated', title: 'Process Panel', hint: 'Process steps and button.' },
+  { key: 'cta', title: 'CTA Banner', hint: 'Closing banner text and button.' },
+  { key: 'contact', title: 'Contact Info', hint: 'Channels driving home, footer, and contact page.' },
+  { key: 'about', title: 'About Page', hint: 'Headline, story, stats, foundation, leadership.' },
+  { key: 'footer', title: 'Footer', hint: 'Brand name and description.' },
+];
+
+function HomepageCards() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {SECTION_CARDS.map((card) => (
+        <Link
+          key={card.key}
+          to={`/fontadmin/${card.key}`}
+          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-500 hover:shadow"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="font-semibold text-slate-800">{card.title}</h3>
+            <span className="text-slate-400 transition group-hover:translate-x-1 group-hover:text-gold-600">→</span>
+          </div>
+          <p className="mt-1 text-xs text-slate-500">{card.hint}</p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function SectionDetail({ cardKey }: { cardKey: SectionCardKey }) {
+  const card = SECTION_CARDS.find((c) => c.key === cardKey);
+  if (!card) return <Navigate to="/fontadmin" replace />;
+  return (
+    <div className="space-y-5">
+      <Link
+        to="/fontadmin"
+        className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition hover:text-teal-700"
+      >
+        ← All sections
+      </Link>
+      {cardKey === 'hero' && <HeroEditor />}
+      {cardKey === 'layout' && <LayoutEditor />}
+      {cardKey === 'showcase' && <ShowcaseEditor />}
+      {cardKey === 'grid' && <GridEditor />}
+      {cardKey === 'animated' && <AnimatedEditor />}
+      {cardKey === 'cta' && <CtaEditor />}
+      {cardKey === 'contact' && <ContactEditor />}
+      {cardKey === 'about' && <AboutEditor />}
+      {cardKey === 'footer' && <FooterEditor />}
+    </div>
+  );
+}
+
 function FooterEditor() {
   const { content, set } = useContent();
   const f = content.footer;
@@ -548,10 +717,222 @@ function FooterEditor() {
   );
 }
 
-export default function Admin() {
-  const [section, setSection] = useState<SectionKey>('hero');
-  const { reset, sync } = useContent();
+function SessionCard() {
+  const { username, mode, logout } = useAuth();
+  return (
+    <Card title="Session" hint="Who is signed in and how.">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium text-slate-800">{username ?? 'Unknown user'}</p>
+          <p className="mt-1 text-xs text-slate-500">
+            {mode === 'api'
+              ? 'Connected to the live API — edits publish to the server.'
+              : 'Local demo mode — no backend reachable, edits stay in this browser.'}
+          </p>
+        </div>
+        <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${mode === 'api' ? 'bg-teal-600 text-white' : 'bg-gold-500 text-black'}`}>
+          {mode === 'api' ? 'Live API' : 'Local demo'}
+        </span>
+      </div>
+      <div>
+        <button
+          type="button"
+          onClick={logout}
+          className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400"
+        >
+          Log out
+        </button>
+      </div>
+    </Card>
+  );
+}
+
+function BackupCard() {
+  const { content, replace } = useContent();
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const exportJson = () => {
+    const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'site-content.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    setNotice('Downloaded site-content.json.');
+  };
+
+  const importJson = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result));
+        if (!parsed || typeof parsed.hero !== 'object' || !Array.isArray(parsed.homeLayout)) {
+          setNotice('That file is not valid site content (needs hero + homeLayout).');
+          return;
+        }
+        replace(parsed);
+        setNotice(`Imported ${file.name} — applied everywhere instantly.`);
+      } catch {
+        setNotice('Could not read that file — is it valid JSON?');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  return (
+    <Card title="Backup & restore" hint="Download the whole site content as JSON, or restore from a file.">
+      {notice && (
+        <p className="rounded-lg bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-200">
+          {notice}
+        </p>
+      )}
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={exportJson}
+          className="rounded-lg bg-navy-800 px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          Export JSON
+        </button>
+        <label className="cursor-pointer rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400">
+          Import JSON…
+          <input
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) importJson(file);
+              e.target.value = '';
+            }}
+          />
+        </label>
+      </div>
+    </Card>
+  );
+}
+
+function DangerCard() {
+  const { reset } = useContent();
+  return (
+    <Card title="Danger zone" hint="Irreversible. Export a backup first if unsure.">
+      <div>
+        <button
+          type="button"
+          onClick={() => {
+            if (window.confirm('Reset all content to the defaults?')) reset();
+          }}
+          className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+        >
+          Reset to defaults
+        </button>
+      </div>
+    </Card>
+  );
+}
+
+function StatTile({ value, label, to }: { value: number | string; label: string; to?: string }) {
+  const body = (
+    <>
+      <p className="text-3xl font-bold text-navy-800">{value}</p>
+      <p className="mt-1 text-sm text-slate-600">{label}</p>
+    </>
+  );
+  if (!to) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        {body}
+      </div>
+    );
+  }
+  return (
+    <Link
+      to={to}
+      className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-500 hover:shadow"
+    >
+      {body}
+      <p className="mt-2 text-xs font-medium text-slate-400 transition group-hover:text-gold-600">
+        Manage →
+      </p>
+    </Link>
+  );
+}
+
+function Dashboard() {
+  const { content, sync } = useContent();
+  const { username, mode } = useAuth();
+  const [visits, setVisits] = useState({ total: 0, today: 0 });
+  useEffect(() => {
+    const v = getVisits();
+    setVisits({ total: v.total, today: v.today });
+  }, []);
+  const visible = content.homeLayout.filter((item) => item.visible).length;
+  const total = content.homeLayout.length;
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StatTile value={visits.total} label={`Visitors (this device · ${visits.today} today)`} />
+        <StatTile value={content.showcase.items.length} label="Services in showcase" to="/fontadmin/showcase" />
+        <StatTile value={content.grid.cards.length} label="Why-us trust cards" to="/fontadmin/grid" />
+        <StatTile value={content.animated.cards.length} label="Process steps" to="/fontadmin/animated" />
+        <StatTile value={content.contact.channels.length} label="Contact channels" to="/fontadmin/contact" />
+        <StatTile value={`${visible}/${total}`} label="Homepage sections visible" to="/fontadmin/layout" />
+      </div>
+      <Card title="Homepage order" hint="Top to bottom as visitors see it. Arrange in Homepage Layout.">
+        <div className="flex flex-wrap items-center gap-2">
+          {content.homeLayout.map((item) => (
+            <span
+              key={item.id}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${
+                item.visible
+                  ? 'bg-white text-slate-700 ring-slate-200'
+                  : 'bg-slate-100 text-slate-400 ring-slate-200 line-through'
+              }`}
+            >
+              <span className={`size-1.5 rounded-full ${item.visible ? 'bg-teal-600' : 'bg-slate-300'}`} />
+              {SECTION_NAMES[item.id]}
+            </span>
+          ))}
+        </div>
+      </Card>
+      <Card title="Status" hint="Session, connection, and save state.">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600">
+          <p>
+            Signed in as <span className="font-semibold text-slate-800">{username ?? 'Unknown user'}</span>
+          </p>
+          <p>
+            Connection:{' '}
+            <span className={`font-semibold ${mode === 'api' ? 'text-teal-700' : 'text-gold-600'}`}>
+              {mode === 'api' ? 'Live API' : 'Local demo'}
+            </span>
+          </p>
+          <p>
+            Sync:{' '}
+            <span className={sync === 'error' ? 'font-semibold text-red-600' : 'font-medium text-slate-700'}>
+              {sync === 'saving' ? 'Saving…' : sync === 'saved' ? 'All changes saved.' : sync === 'error' ? 'Could not save to the server.' : 'Up to date.'}
+            </span>
+          </p>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+export type AdminView = 'dashboard' | 'homepage' | 'settings' | 'section';
+
+const TABS: { view: Exclude<AdminView, 'section'>; label: string; to: string }[] = [
+  { view: 'dashboard', label: 'Dashboard', to: '/fontadmin/dashboard' },
+  { view: 'homepage', label: 'Homepage', to: '/fontadmin/homepage' },
+  { view: 'settings', label: 'Settings', to: '/fontadmin/settings' },
+];
+
+export default function Admin({ view }: { view: AdminView }) {
+  const { sync } = useContent();
   const { isAuthed, ready, logout } = useAuth();
+  const { section } = useParams();
+  const cardKey =
+    view === 'section' ? (SECTION_CARDS.find((c) => c.key === section)?.key ?? null) : null;
 
   if (!ready) {
     return (
@@ -582,19 +963,20 @@ export default function Admin() {
           <p className="mt-1 text-xs text-slate-400">Site Admin</p>
         </div>
         <nav className="grow space-y-1 overflow-y-auto px-3">
-          {SECTIONS.map((s) => (
-            <button
-              key={s.key}
-              type="button"
-              onClick={() => setSection(s.key)}
-              className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium transition ${
-                section === s.key
-                  ? 'bg-white/10 text-white ring-1 ring-inset ring-gold-500'
-                  : 'text-slate-300 hover:bg-white/5 hover:text-white'
-              }`}
+          {TABS.map((t) => (
+            <NavLink
+              key={t.view}
+              to={t.to}
+              className={({ isActive }) =>
+                `flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium transition ${
+                  isActive
+                    ? 'bg-white/10 text-white ring-1 ring-inset ring-gold-500'
+                    : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                }`
+              }
             >
-              {s.label}
-            </button>
+              {t.label}
+            </NavLink>
           ))}
         </nav>
         <div className="space-y-2 p-3">
@@ -604,15 +986,6 @@ export default function Admin() {
             className="w-full rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-white/50 hover:text-white"
           >
             Log out
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm('Reset all content to the defaults?')) reset();
-            }}
-            className="w-full rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-red-400 hover:text-red-300"
-          >
-            Reset to defaults
           </button>
           <Link
             to="/"
@@ -627,11 +1000,24 @@ export default function Admin() {
         <div className="mx-auto max-w-3xl">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold text-slate-800">
-              {SECTIONS.find((s) => s.key === section)?.label}
+              {view === 'dashboard'
+                ? 'Dashboard'
+                : view === 'homepage'
+                  ? 'Homepage'
+                  : view === 'settings'
+                    ? 'Settings'
+                    : (cardKey && SECTION_CARDS.find((c) => c.key === cardKey)?.title) || 'Homepage'}
             </h1>
             <p className="mt-1 text-sm text-slate-500">
-              Changes save automatically to the server and appear on the site
-              instantly.{' '}
+              {view === 'dashboard'
+                ? 'General stats across the whole site.'
+                : view === 'homepage' && !cardKey
+                  ? 'Everything on this page as cards — pick one to edit.'
+                  : view === 'homepage'
+                    ? 'Changes save automatically.'
+                    : view === 'settings'
+                      ? 'Session, backups, and destructive actions.'
+                      : 'Changes save automatically.'}{' '}
               {syncLabel && (
                 <span
                   className={
@@ -644,15 +1030,23 @@ export default function Admin() {
             </p>
           </div>
           <div className="space-y-5">
-            {section === 'hero' && <HeroEditor />}
-            {section === 'layout' && <LayoutEditor />}
-            {section === 'showcase' && <ShowcaseEditor />}
-            {section === 'grid' && <GridEditor />}
-            {section === 'animated' && <AnimatedEditor />}
-            {section === 'cta' && <CtaEditor />}
-            {section === 'about' && <AboutEditor />}
-            {section === 'contact' && <ContactEditor />}
-            {section === 'footer' && <FooterEditor />}
+            {view === 'dashboard' ? (
+              <Dashboard />
+            ) : view === 'homepage' ? (
+              <HomepageCards />
+            ) : view === 'settings' ? (
+              <>
+                <SessionCard />
+                <BackupCard />
+                <DangerCard />
+              </>
+            ) : section && !cardKey ? (
+              <Navigate to="/fontadmin/homepage" replace />
+            ) : cardKey ? (
+              <SectionDetail cardKey={cardKey} />
+            ) : (
+              <Navigate to="/fontadmin/homepage" replace />
+            )}
           </div>
         </div>
       </main>

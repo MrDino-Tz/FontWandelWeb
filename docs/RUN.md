@@ -135,10 +135,26 @@ python3 -m uvicorn app.main:app --port 8000
 
 If `dist/` is missing you get a `503` telling you to build first.
 
+### Frontend ↔ backend integration
+
+The frontend talks to same-origin `/api` (no extra config):
+
+- **Dev:** Vite proxies `/api` → `http://127.0.0.1:8000`, so run both
+  processes and open the dev URL — login, content saving, guides, and the
+  contact form all hit the live API.
+- **Backend-served:** `frontend/dist` served by uvicorn — same origin,
+  everything works.
+- **Static hosting (no backend):** `/api/*` isn't there, so the site
+  automatically falls back to bundled content, demo login
+  (`admin` / `fontwandel123`), and a contact form that explains email
+  fallback. Nothing breaks.
+- **Split hosting:** set `VITE_API_URL=https://api-host` in
+  `frontend/.env` (must allow the site in the backend's `cors_origins`
+  and use HTTPS with `FW_COOKIE_SECURE=true` for admin sessions).
+
 ---
 
 ## 3. Demo logins & data
-
 - **Site admin (frontend):** `/FontWandelWeb/fontadmin/login` →
   username `admin`, password `fontwandel123` (mocked in-browser demo).
 - **API admin:** same credentials against `POST /api/auth/login`

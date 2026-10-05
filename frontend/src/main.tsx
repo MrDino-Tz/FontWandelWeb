@@ -7,10 +7,10 @@ import { AuthProvider } from './admin/auth.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SiteContentProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <SiteContentProvider>
         <App />
-      </AuthProvider>
-    </SiteContentProvider>
+      </SiteContentProvider>
+    </AuthProvider>
   </StrictMode>,
 )

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { recordVisit } from './admin/visits';
 import BaseLayout from './layout/BaseLayout';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -64,6 +65,9 @@ function PrelineInit() {
 }
 
 export default function App() {
+  useEffect(() => {
+    recordVisit();
+  }, []);
   return (
     <BrowserRouter basename="/FontWandelWeb">
       <ScrollToTop />
@@ -71,7 +75,11 @@ export default function App() {
       <PrelineInit />
       <Routes>
         <Route path="fontadmin/login" element={<Login />} />
-        <Route path="fontadmin" element={<Admin />} />
+        <Route path="fontadmin" element={<Navigate to="/fontadmin/dashboard" replace />} />
+        <Route path="fontadmin/dashboard" element={<Admin view="dashboard" />} />
+        <Route path="fontadmin/homepage" element={<Admin view="homepage" />} />
+        <Route path="fontadmin/settings" element={<Admin view="settings" />} />
+        <Route path="fontadmin/:section" element={<Admin view="section" />} />
         <Route element={<BaseLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
